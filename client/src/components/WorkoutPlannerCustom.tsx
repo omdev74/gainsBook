@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import React from "react"
+
 import * as Types from "@shared/types/workout"
 // Importing UI components
 import {
@@ -12,7 +12,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
+
 
 
 // Initial workout data to populate the planner
