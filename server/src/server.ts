@@ -1,4 +1,5 @@
 import express from 'express';
+import { WorkoutItem } from "@shared/types/workout";
 
 const app = express();
 const port = 5000;

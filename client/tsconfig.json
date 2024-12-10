@@ -8,15 +8,15 @@
       "path": "./tsconfig.node.json"
     }
   ],
-
-
   // schadcn req
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      
+    
     }
   }
 }
