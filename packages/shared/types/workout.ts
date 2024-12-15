@@ -2,11 +2,13 @@
 export interface NormalSet {
   reps: number;
   weight: number;
+  completed: boolean;
 }
 
 export interface Exercise {
   id: string;
   name: string;
+  previous: NormalSet[];
   sets: NormalSet[];
 }
 
