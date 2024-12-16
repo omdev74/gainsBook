@@ -25,10 +25,17 @@ export default function NormalSet() {
   }
 
   const updateSet = (index: number, field: keyof Set, value: string | boolean) => {
-    const newSets = [...sets]
-    newSets[index][field] = value
-    setSets(newSets)
+  const newSets = [...sets];
+  
+  // Ensure the value is correctly assigned based on the field type
+  if (field === 'completed') {
+    newSets[index][field] = Boolean(value);  // Ensure the value is a boolean
+  } else {
+    newSets[index][field] = String(value);  // Ensure the value is a string for the other fields
   }
+  
+  setSets(newSets);
+};
 
   return (
     <Card className="p-1 md:p-6"> {/* Increased padding for desktop */}
