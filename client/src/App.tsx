@@ -7,6 +7,12 @@ import { Dumbbell, Moon, Sun } from 'lucide-react';
 
 import WorkoutTrackershadcn from './components/workout-tracker';
 import { ModeToggle } from './components/ModeToggle';
+import Profile from './components/Pages/Profile';
+import History from './components/Pages/History';
+import Exercises from './components/Pages/Exercises';
+import { Navbar } from './components/Navbar';
+
+
 
 
 
@@ -14,36 +20,16 @@ const App: React.FC = () => {
   return (
 
     <BrowserRouter>
+      <Navbar />
 
-      <header className="flex  justify-evenly p-4">
-        <h1 className="text-2xl font-bold flex items-center space-x-2">
-          <Dumbbell className="h-6 w-6 text-primary" /> {/* You can adjust the size using the `h-6 w-6` classes */}
-          <span>GymBook</span>
-        </h1>
-        <div className="flex space-x-4">
-          <Link to="/" className="btn btn-primary">Custom Workout</Link>
-          <Link to="/d" className="btn btn-primary">Standard Workout</Link>
-          <Link to="/c" className="btn btn-primary">Card Workout</Link>
-          <Link to="/s" className="btn btn-primary">shadcn</Link>
-
-
-        </div>
-        <ModeToggle />
-      </header>
-
-      <main className="p-8">
+      <main className="p-1">
         <Routes>
           <Route path="/" element={<WorkoutTrackershadcn />} />
-
-
-
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/exercises" element={<Exercises />} />
         </Routes>
       </main>
-
-
-
-
-
     </BrowserRouter>
 
   );
