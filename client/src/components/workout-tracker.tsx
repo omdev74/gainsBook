@@ -1,8 +1,7 @@
 "use client"
-
-
 import NormalSet from "./SetTypes/normal-set"
-import Superset from "./SetTypes/superset"
+import Superset from "./SetTypes/SuperSetComp"
+
 
 
 export default function WorkoutTrackershadcn() {
