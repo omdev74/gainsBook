@@ -3,13 +3,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
+
 import { WeeklyChart } from "@/components/weekly-chart"
 import { RecentWorkouts } from "@/components/recent-workouts"
+import Anatomy from "../Anatomy";
 
 
 
 
 export default function Profile() {
+
+    const handleMuscleClick = (e: any) => {
+        console.log(e);
+
+    }
 
     return (
         <>
@@ -25,6 +32,7 @@ export default function Profile() {
                     </div>
                 </div>
 
+
                 <div className="grid gap-8 md:grid-cols-2">
                     <Card>
                         <CardHeader>
@@ -34,7 +42,10 @@ export default function Profile() {
                             <WeeklyChart />
                         </CardContent>
                     </Card>
+                    <Card>
+                        <Anatomy />
 
+                    </Card>
                     <Card>
                         <CardHeader>
                             <CardTitle>Recent Workouts</CardTitle>
@@ -44,6 +55,9 @@ export default function Profile() {
                         </CardContent>
                     </Card>
                 </div>
+
+
+
             </div>
 
         </>
