@@ -1,13 +1,9 @@
 import { useState } from "react";
-import Svg from "../assets/anatomy.svg?react"
-
-
-
+import Svg from "./Svg";
 
 const Anatomy = () => {
-
     const [selectedMuscles, setSelectedMuscles] = useState<Set<string>>(new Set());
-    const [selectedGroup, setSelectedGroup] = useState<string>();
+    const [selectedGroup, setSelectedGroup] = useState<string | undefined>();
 
     // Event handler for clicks
     const handleMuscleClick = (e: React.MouseEvent<SVGElement>) => {
@@ -25,32 +21,35 @@ const Anatomy = () => {
                 }
                 return updatedSelection;
             });
-        }
-        else {
-            console.log(parentGroup?.id ?? "No group ID found")
-            setSelectedGroup(parentGroup?.id)
-
-
-
-
-
-            // console.log(Svg);
-
+        } else {
+            console.log(parentGroup?.id ?? "No group ID found");
+            setSelectedGroup(parentGroup?.id);
         }
     };
 
-
+    const muscleGroupData = {
+        chest: "red",  // Red for chest
+        abs: "#33ff57",    // Green for abs
+        forearms: "#3357ff",  // Blue for forearms
+        shoulders: "#ff5733", // Red for shoulders
+        // More muscle groups...
+    };
 
     return (
         <>
             <Svg
-                className="interactive-svg "
-                onClick={handleMuscleClick}
-            />
 
-            <h3 className="color-primary">{selectedGroup}</h3>
+                onClick={handleMuscleClick}
+                muscleGroupData={muscleGroupData}
+            >
+                <g id="back" fill="red"></g>
+            </Svg>
+
+            <h3 className="text-primary">{selectedGroup}</h3>
+
+
         </>
-    )
-}
+    );
+};
 
 export default Anatomy;
