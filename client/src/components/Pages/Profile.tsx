@@ -21,7 +21,7 @@ export default function Profile() {
     return (
         <>
             <div className="container mx-auto px-4 py-8">
-                <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div className="flex flex-col md:flex-row justify-between items-center ">
                     <h1 className="text-3xl font-bold mb-4 md:mb-0">Dashboard</h1>
                     <div className="flex items-center space-x-4">
                         <span className="text-lg font-medium">John Doe</span>

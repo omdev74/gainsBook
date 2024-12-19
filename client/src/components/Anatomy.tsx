@@ -28,11 +28,11 @@ const Anatomy = () => {
     };
 
     const muscleGroupData = {
-        chest: "red",  // Red for chest
-        abs: "#33ff57",    // Green for abs
-        forearms: "#3357ff",  // Blue for forearms
-        shoulders: "#ff5733", // Red for shoulders
-        // More muscle groups...
+        chest: "red",
+        abs: "#33ff57",
+        forearms: "#3357ff",
+        shoulders: "#ff5733",
+
     };
 
     return (

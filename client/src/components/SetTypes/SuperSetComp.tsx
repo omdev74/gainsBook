@@ -73,30 +73,26 @@ export default function Superset() {
 
   return (
     // Card component to structure the Superset UI
-    <Card>
+    <Card className="p-1 md:p-6">
       {/* Header section with title and close button */}
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">Superset</CardTitle>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-red-500 hover:text-red-700 hover:bg-red-100"
-        >
+        <CardTitle className="text-sm font-medium md:text-base">Superset</CardTitle>
+        <Button variant="ghost" size="icon">
           <X className="h-4 w-4" />
         </Button>
       </CardHeader>
 
       {/* Main content section displaying the sets and exercises */}
-      <CardContent>
+      <CardContent className="sm: p-1 ">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Set</TableHead>
-              <TableHead>Exercise</TableHead>
-              <TableHead>Previous</TableHead>
-              <TableHead>Lbs</TableHead>
-              <TableHead>Reps</TableHead>
-              <TableHead className="text-right">Status</TableHead>
+              <TableHead className="text-xs md:text-sm px-2">Set</TableHead>
+              <TableHead className="text-xs md:text-sm px-2">Exercise</TableHead>
+              <TableHead className="text-xs md:text-sm px-2">Previous</TableHead>
+              <TableHead className="text-xs md:text-sm px-2">Lbs</TableHead>
+              <TableHead className="text-xs md:text-sm px-2">Reps</TableHead>
+              <TableHead className="text-right text-xs md:text-sm px-2">Status</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -110,15 +106,15 @@ export default function Superset() {
                     {exerciseIndex === 0 && (
                       <TableCell
                         rowSpan={set.exercises.length}
-                        className="align-middle text-center"
+                        className="align-middle text-center text-xs md:text-sm"
                       >
                         {setIndex + 1}
                       </TableCell>
                     )}
 
                     {/* Exercise details */}
-                    <TableCell>{exercise.name}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-xs md:text-sm">{exercise.name}</TableCell>
+                    <TableCell className="text-xs md:text-sm">
                       {/* Displaying previous stats */}
                       {exercise.previous
                         .map((prev) => `${prev.weight} lbs x ${prev.reps}`)
@@ -137,7 +133,7 @@ export default function Superset() {
                             [{ weight: parseInt(e.target.value), reps: 0, completed: false }]
                           )
                         }
-                        className="w-16"
+                        className="w-12 md:w-16 text-xs md:text-sm"
                       />
                     </TableCell>
                     <TableCell>
@@ -153,7 +149,7 @@ export default function Superset() {
                             [{ reps: parseInt(e.target.value), weight: 0, completed: false }]
                           )
                         }
-                        className="w-16"
+                        className="w-12 md:w-16 text-xs md:text-sm"
                       />
                     </TableCell>
 
@@ -194,14 +190,10 @@ export default function Superset() {
         </Table>
 
         {/* Button to add a new set */}
-        <Button
-          variant="outline"
-          onClick={addSet}
-          className="mt-4 bg-green-500 text-white hover:bg-green-600"
-        >
+        <Button variant="outline" onClick={addSet} className="mt-2 text-xs md:text-sm">
           <Plus className="h-4 w-4 mr-2" /> Add Set
         </Button>
       </CardContent>
-    </Card>
+    </Card >
   )
 }

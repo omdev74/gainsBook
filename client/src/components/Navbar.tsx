@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { NavLink } from "react-router";  // Use NavLink for active link
 import { Dumbbell, Home, Calendar, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,12 +13,12 @@ export function Navbar() {
                     <div className="flex justify-between h-16">
                         <div className="flex">
                             <h1 className="text-2xl font-bold flex items-center space-x-2">
-                                <Dumbbell className="h-6 w-6 text-primary" /> {/* Adjust size with `h-6 w-6` classes */}
-                                <span><Link to="/">GainsBook</Link></span>
+                                <Dumbbell className="h-6 w-6 text-primary" />
+                                <span><NavLink to="/">GainsBook</NavLink></span>
                             </h1>
                         </div>
                         <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                            <NavItem to="/profile" icon={<Home className="h-5 w-5" />}>
+                            <NavItem to="/" icon={<Home className="h-5 w-5" />}>
                                 Home
                             </NavItem>
                             <NavItem to="/exercises" icon={<Dumbbell className="h-5 w-5" />}>
@@ -29,21 +29,24 @@ export function Navbar() {
                             </NavItem>
                         </div>
                         <div className="flex items-center">
-                            <ModeToggle></ModeToggle>
+                            <ModeToggle />
                             <Button variant="ghost" size="icon">
                                 <Settings className="h-5 w-5" />
                             </Button>
-                            <Avatar className="ml-3">
-                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
+                            <NavLink to="/profile">
+                                <Avatar className="ml-3">
+                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
+                            </NavLink>
                         </div>
                     </div>
                 </div>
             </nav>
+
             {/* Mobile Navbar (Bottom) */}
             <nav className="bg-background fixed bottom-0 left-0 right-0 sm:hidden flex justify-around items-center border-t z-10 p-2.5">
-                <NavItem to="/profile" icon={<Home className="h-6 w-6" />}>
+                <NavItem to="/" icon={<Home className="h-6 w-6" />}>
                     Home
                 </NavItem>
                 <NavItem to="/exercises" icon={<Dumbbell className="h-6 w-6" />}>
@@ -58,32 +61,26 @@ export function Navbar() {
                 </Avatar>}>
                     Profile
                 </NavItem>
-
             </nav>
 
             {/* Mobile ModeToggle (Floating Top) */}
-            <div className="fixed top-2 right-2 sm:hidden z-20  rounded-full bg-popover" >
-
+            <div className="fixed top-2 right-2 sm:hidden z-20 rounded-full bg-popover">
                 <ModeToggle />
-
-
             </div>
         </>
-
-
-
-
     );
 }
 
 function NavItem({ to, icon, children }: { to: string; icon: React.ReactNode; children: React.ReactNode }) {
     return (
-        <Link
+        <NavLink
             to={to}
-            className="inline-flex flex-col items-center px-1 pt-1 text-sm font-medium text-foreground hover:text-primary sm:flex-row"
+            className={({ isActive }) =>
+                `inline-flex flex-col items-center px-1 pt-1 text-sm font-medium ${isActive ? "text-primary" : "text-foreground"} hover:text-primary sm:flex-row`
+            }
         >
             {icon}
             <span className="text-xs mt-1 sm:ml-2">{children}</span>
-        </Link>
+        </NavLink>
     );
 }

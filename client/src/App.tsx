@@ -22,7 +22,9 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Navbar />
 
-      <main className="p-1 mb-14">
+      <main className="p-1 mb-32">
+
+
         <Routes>
           <Route path="/" element={<WorkoutTrackershadcn />} />
           <Route path="/profile" element={<Profile />} />
