@@ -3,13 +3,13 @@ export interface NormalSet {
   reps: number;
   weight: number;
   completed: boolean;
+  setType: "Normal"
 }
 
 export interface Exercise {
   id: string;
   name: string;
-  previous: NormalSet[];
-  sets: NormalSet[];
+  sets: WorkoutSet[];
 }
 
 export interface Superset {
@@ -18,7 +18,26 @@ export interface Superset {
   exercises: Exercise[];
 }
 
+export interface DropSet {
+  drops: [{
+    reps: number;
+    weight: number;
+  }],
+  completed: boolean;
+  setType: "Drop"
+
+}
+export interface MyorepSet {
+  drops: [{
+    reps: number;
+    weight: number;
+  }],
+  completed: boolean;
+  setType: "Myorep"
+}
 export type WorkoutItem = Exercise | Superset;
+export type WorkoutSet = NormalSet | DropSet | MyorepSet;
+
 
 
 

@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router';
 
 import { Dumbbell, Moon, Sun } from 'lucide-react';
 
-import WorkoutTrackershadcn from './components/workout-tracker';
+import WorkoutTrackershadcn from './components/Pages/workout-tracker';
 import { ModeToggle } from './components/ModeToggle';
 import Profile from './components/Pages/Profile';
 import History from './components/Pages/History';
