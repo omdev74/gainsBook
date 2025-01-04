@@ -50,6 +50,10 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                             {
                                 "reps": 4,
                                 "weight": 70
+                            },
+                            {
+                                "reps": 4,
+                                "weight": 70
                             }
                         ],
                         "completed": false,

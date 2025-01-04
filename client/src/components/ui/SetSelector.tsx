@@ -7,8 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 interface ISetSelectorProps {
     setNumber: number;
-    setType: "Myorep" | "Drop" | "Normal";
-    selectorChange: (newType: "Myorep" | "Drop" | "Normal") => void; // Correct type for the callback
+    setType: "Myorep" | "Drop" | "Normal" | "Warmup";
+    selectorChange: (newType: "Myorep" | "Drop" | "Normal" | "Warmup") => void; // Correct type for the callback
     rowSpan: number;
 }
 
@@ -32,8 +32,8 @@ const SetSelector: React.FunctionComponent<ISetSelectorProps> = (props) => {
     const handleOptionSelect = (option: string) => {
         setSelectedOption(option);
         // Call the selectorChange callback to update the parent state
-        if (["Normal", "Drop", "Myorep"].includes(option)) {
-            props.selectorChange(option as "Myorep" | "Drop" | "Normal");
+        if (["Normal", "Drop", "Myorep", "Warmup"].includes(option)) {
+            props.selectorChange(option as "Myorep" | "Drop" | "Normal" | "Warmup");
         }
         toggleDrawer(); // Close the drawer after selection
     };

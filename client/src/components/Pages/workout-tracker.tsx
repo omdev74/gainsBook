@@ -5,6 +5,9 @@ import EC_normal from "../ExerciseCard_normal"
 
 
 import { WorkoutItem, Exercise, Superset, NormalSet, DropSet, MyorepSet } from "@shared/types/workout";
+import { Button } from "../ui/button";
+import { NavLink } from "react-router";
+import WorkoutState from "./WorkoutState";
 export default function WorkoutTrackershadcn() {
 
 
@@ -12,8 +15,8 @@ export default function WorkoutTrackershadcn() {
     <WorkoutProvider>
       <div className=" max-w-4xl mx-auto">
         <div className="space-y-6">
-          <EC_normal/>
-
+          <EC_normal />
+          <WorkoutState />
 
 
           {/* <Superset /> */}
