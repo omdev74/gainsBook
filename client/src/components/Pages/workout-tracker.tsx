@@ -8,18 +8,24 @@ import { WorkoutItem, Exercise, Superset, NormalSet, DropSet, MyorepSet } from "
 import { Button } from "../ui/button";
 import { NavLink } from "react-router";
 import WorkoutState from "./WorkoutState";
+import { Check, X } from "lucide-react";
+import Timer from "../Timer";
+import EC_superset from "../ExerciseCard_superset";
 export default function WorkoutTrackershadcn() {
 
 
   return (
     <WorkoutProvider>
+
       <div className=" max-w-4xl mx-auto">
         <div className="space-y-6">
+          <Timer />
           <EC_normal />
+          <EC_superset />
+
           <WorkoutState />
 
 
-          {/* <Superset /> */}
         </div>
       </div>
     </WorkoutProvider>

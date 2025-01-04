@@ -18,7 +18,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Navbar />
 
-      <main className="p-1 mb-32">
+      <main className="p-2.5 mb-32">
 
 
         <Routes>

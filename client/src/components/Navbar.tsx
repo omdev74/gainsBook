@@ -64,9 +64,9 @@ export function Navbar() {
             </nav>
 
             {/* Mobile ModeToggle (Floating Top) */}
-            <div className="fixed top-2 right-2 sm:hidden z-20 rounded-full bg-popover">
+            {/* <div className="fixed top-2 right-2 sm:hidden z-20 rounded-full bg-popover">
                 <ModeToggle />
-            </div>
+            </div> */}
         </>
     );
 }

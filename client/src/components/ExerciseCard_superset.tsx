@@ -1,22 +1,23 @@
 import * as React from 'react';
-import { useState } from "react"
+
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, X } from 'lucide-react'
 import { useWorkout } from '@/contexts/WorkoutContext';
-import { WorkoutSet } from '@shared/types/workout';
-import Set from './Sets/Set';
+import { Exercise, WorkoutSet } from '@shared/types/workout';
 import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerClose, DrawerTrigger } from "@/components/ui/drawer";
+import { Input } from './ui/input';
+import { Badge } from './ui/badge';
+import { Checkbox } from './ui/checkbox';
 
 
 
-interface IEC_normalProps {
+interface ISuperEC_superset {
 }
 
-
-
-const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
+const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
     const { workout, setWorkout } = useWorkout(); // 
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -59,7 +60,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
 
     const addNormalSet = () => {
         // Ensure sets array is initialized properly
-        if (!workout.items[0].sets) {
+        if (!workout.items[2].exercises) {
             console.error("Sets array is not initialized");
             return;
         }
@@ -140,10 +141,15 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         Warmup: { shortText: "Warmup", color: "border-transparent text-primary-foreground bg-yellow-600" },
         Myorep: { shortText: "Myorep", color: "border-transparent text-primary-foreground bg-red-600" },
     };
+
+    useEffect(() => {
+        // sanitation of data
+        console.log(workout.items[2]);
+    }, []);
     return (
         <Card className="p-1 md:p-6">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2">
-                <CardTitle className="text-sm md:text-base font-medium">{workout.items[0].name}</CardTitle>
+                <CardTitle className="text-sm md:text-base font-medium">{workout.items[2].name}</CardTitle>
                 <Button variant="ghost" size="icon">
                     <X className="h-4 w-4" />
                 </Button>
@@ -152,18 +158,79 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                 <Table className="w-full table-auto border-collapse">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[60px] text-xs md:text-sm px-2">Set</TableHead>
-                            <TableHead className="text-xs md:text-sm px-2">Previous</TableHead>
+                            <TableHead className="w-14 text-xs md:text-sm px-2">Set</TableHead>
+                            <TableHead className="text-xs md:text-sm px-2">Exercise</TableHead>
                             <TableHead className="text-xs md:text-sm px-2">Lbs</TableHead>
                             <TableHead className="text-xs md:text-sm px-2">Reps</TableHead>
                             <TableHead className="text-xs md:text-sm text-right px-2">Status</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody className="text-xs">
-                        {workout.items[0].sets.map((set: WorkoutSet, index: number) => (
-                            <Set set={set} index={index} inputchangeHandler={inputchangeHandler} key={index} />
+                        {/* Loop through sets in the first exercise */}
+                        {workout.items[2].exercises[0].sets.map((set: WorkoutSet, index: number) => (
+                            <>
+                                {/* Render the first exercise's set */}
+                                <TableRow key={`exercise-0-set-${index}`}>
+                                    <TableCell
+                                        className="relative cursor-pointer text-xs md:text-sm"
+                                        rowSpan={workout.items[2].exercises.length}
+                                    >
+                                        <span className="mr-2">{index + 1}</span>
+                                    </TableCell>
+                                    <TableCell>{workout.items[2].exercises[0].name}</TableCell>
+                                    <TableCell>
+                                        <Input
+                                            type="number"
+                                            value={workout.items[2].exercises[0].sets[index]?.weight || ''}
+
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Input
+                                            type="number"
+                                            value={workout.items[2].exercises[0].sets[index]?.reps || ''}
+
+                                        />
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <Checkbox
+                                            checked={workout.items[2].exercises[0].sets[index]?.completed || false}
+
+                                        />
+                                    </TableCell>
+                                </TableRow>
+
+                                {/* Render the second exercise's set for the same index */}
+                                {workout.items[2].exercises[1]?.sets[index] && (
+                                    <TableRow key={`exercise-1-set-${index}`}>
+                                        <TableCell>{workout.items[2].exercises[1].name}</TableCell>
+                                        <TableCell>
+                                            <Input
+                                                type="number"
+                                                value={workout.items[2].exercises[1].sets[index]?.weight || ''}
+
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Input
+                                                type="number"
+                                                value={workout.items[2].exercises[1].sets[index]?.reps || ''}
+
+                                            />
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <Checkbox
+                                                checked={workout.items[2].exercises[1].sets[index]?.completed || false}
+
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </>
                         ))}
                     </TableBody>
+
+
                 </Table>
 
 
@@ -199,12 +266,9 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
             <CardFooter className='p-3 md:p-4 flex-col gap-6 text-xs md:text-sm' >
                 <div className="w-full flex justify-evenly ">
                     <Button variant="default" className="text-xs md:text-sm" onClick={addNormalSet}>
-                        <Plus className="h-4 w-4 mr-2" /> Add Normal Set
+                        <Plus className="h-4 w-4 mr-2" /> Add Set
                     </Button>
 
-                    <Button variant="default" className="text-xs md:text-sm" onClick={toggleDrawer}>
-                        <Plus className="h-4 w-4 mr-2" /> Add Special Set
-                    </Button>
                 </div>
                 <div className="w-full flex justify-between text-center">
                     <div className="flex flex-col">
@@ -225,6 +289,4 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
     );
 };
 
-export default EC_normal;
-
-
+export default EC_superset;

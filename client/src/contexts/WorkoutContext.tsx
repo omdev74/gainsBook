@@ -86,6 +86,24 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                         "name": "Bench Press",
                         "sets": [
                             {
+                                "reps": 13,
+                                "weight": 50,
+                                "completed": true,
+                                "setType": "Normal"
+                            },
+                            {
+                                "reps": 10,
+                                "weight": 55,
+                                "completed": false,
+                                "setType": "Normal"
+                            },
+                        ]
+                    },
+                    {
+                        "id": "2",
+                        "name": "Squat",
+                        "sets": [
+                            {
                                 "reps": 12,
                                 "weight": 50,
                                 "completed": true,
@@ -97,42 +115,6 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                 "completed": false,
                                 "setType": "Normal"
                             },
-                            {
-                                "drops": [
-                                    {
-                                        "reps": 8,
-                                        "weight": 60
-                                    }
-                                ],
-                                "completed": false,
-                                "setType": "Drop"
-                            },
-                            {
-                                "drops": [
-                                    {
-                                        "reps": 4,
-                                        "weight": 70
-                                    }
-                                ],
-                                "completed": false,
-                                "setType": "Myorep"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "2",
-                        "name": "Squat",
-                        "sets": [
-                            {
-                                "drops": [
-                                    {
-                                        "reps": 8,
-                                        "weight": 60
-                                    }
-                                ],
-                                "completed": false,
-                                "setType": "Drop"
-                            }
                         ]
                     }
                 ]

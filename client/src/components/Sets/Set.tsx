@@ -14,38 +14,6 @@ interface ISetProps {
 const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandler }) => {
   const [setType, setSetType] = React.useState<WorkoutSet["setType"]>(set.setType);
 
-  const selectorChange = (newType: WorkoutSet["setType"]) => {
-    let newSet: WorkoutSet;
-
-    switch (newType) {
-      case "Normal":
-      case "Warmup":
-        newSet = {
-          setType: newType,
-          reps: "reps" in set ? set.reps || 0 : 0,
-          weight: "weight" in set ? set.weight || 0 : 0,
-          completed: set.completed || false,
-        };
-        break;
-
-      case "Drop":
-      case "Myorep":
-        newSet = {
-          setType: newType,
-          drops: "drops" in set && set.drops ? set.drops : [{ reps: 0, weight: 0 }],
-          completed: set.completed || false,
-        };
-        break;
-
-      default:
-        newSet = set;
-        break;
-    }
-
-    setSetType(newType);
-    inputchangeHandler(index, "setType", newSet);
-  };
-
   const renderDropRows = (drops: { reps: number; weight: number }[]) => (
     <>
       {drops.slice(1).map((drop, dropIndex) => (
@@ -62,7 +30,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                   value: e.target.value,
                 })
               }
-              className="w-14 md:w-16 text-xs md:text-sm"
+              
             />
           </TableCell>
           <TableCell>
@@ -76,7 +44,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                   value: e.target.value,
                 })
               }
-              className="w-14 md:w-16 text-xs md:text-sm"
+              
             />
           </TableCell>
           <TableCell className="text-right">
@@ -120,7 +88,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                 type="number"
                 value={(set as NormalSet | WarmupSet).weight}
                 onChange={(e) => inputchangeHandler(index, "weight", e.target.value)}
-                className="w-14 md:w-16 text-xs md:text-sm"
+                
               />
             </TableCell>
             <TableCell>
@@ -128,7 +96,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                 type="number"
                 value={(set as NormalSet | WarmupSet).reps}
                 onChange={(e) => inputchangeHandler(index, "reps", e.target.value)}
-                className="w-14 md:w-16 text-xs md:text-sm"
+                
               />
             </TableCell>
             <TableCell className="text-right">
@@ -178,7 +146,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                       value: e.target.value,
                     })
                   }
-                  className="w-14 md:w-16 text-xs md:text-sm"
+                  
                 />
               </TableCell>
               <TableCell>
@@ -192,7 +160,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                       value: e.target.value,
                     })
                   }
-                  className="w-14 md:w-16 text-xs md:text-sm"
+                  
                 />
               </TableCell>
               <TableCell className="text-right">
