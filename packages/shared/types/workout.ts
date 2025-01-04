@@ -2,7 +2,6 @@
 
 // Base Interfaces for Sets
 interface BaseSet {
-  completed: boolean;
   setType: "Normal" | "Warmup" | "Drop" | "Myorep";
 }
 

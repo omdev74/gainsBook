@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {TableCell,TableRow } from "@/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { WorkoutSet, NormalSet, WarmupSet, DropSet, MyorepSet } from '@shared/types/workout';
 import { Checkbox } from '../ui/checkbox';
@@ -30,7 +30,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                   value: e.target.value,
                 })
               }
-              
+
             />
           </TableCell>
           <TableCell>
@@ -44,16 +44,11 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                   value: e.target.value,
                 })
               }
-              
+
             />
           </TableCell>
           <TableCell className="text-right">
-            <Checkbox
-              checked={set.completed}
-              onCheckedChange={(checked) =>
-                inputchangeHandler(index, "completed", checked as boolean)
-              }
-            />
+            {`${drop.weight * drop.reps}lbs`}
           </TableCell>
 
         </TableRow>
@@ -88,7 +83,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                 type="number"
                 value={(set as NormalSet | WarmupSet).weight}
                 onChange={(e) => inputchangeHandler(index, "weight", e.target.value)}
-                
+
               />
             </TableCell>
             <TableCell>
@@ -96,16 +91,11 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                 type="number"
                 value={(set as NormalSet | WarmupSet).reps}
                 onChange={(e) => inputchangeHandler(index, "reps", e.target.value)}
-                
+
               />
             </TableCell>
             <TableCell className="text-right">
-              <Checkbox
-                checked={set.completed}
-                onCheckedChange={(checked) =>
-                  inputchangeHandler(index, "completed", checked as boolean)
-                }
-              />
+              {`${(set as NormalSet | WarmupSet).weight * (set as NormalSet | WarmupSet).reps}lbs`}
             </TableCell>
           </TableRow>
         );
@@ -146,7 +136,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                       value: e.target.value,
                     })
                   }
-                  
+
                 />
               </TableCell>
               <TableCell>
@@ -160,16 +150,11 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                       value: e.target.value,
                     })
                   }
-                  
+
                 />
               </TableCell>
               <TableCell className="text-right">
-                <Checkbox
-                  checked={set.completed}
-                  onCheckedChange={(checked) =>
-                    inputchangeHandler(index, "completed", checked as boolean)
-                  }
-                />
+                {`${drops[0].weight * drops[0].reps}lbs`}
               </TableCell></TableRow>
             {renderDropRows(drops)}
           </>

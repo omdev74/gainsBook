@@ -68,7 +68,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
             setType: "Normal", // Default set type
             reps: 0,           // Default value
             weight: 0,         // Default value
-            completed: false,  // Default value
+            
         };
 
         // Update the state to add the new set to the item with the name "Bench Press"
@@ -103,7 +103,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                         reps: 0,              // Default reps
                         weight: 0
                     }],            // Initialize with an empty drops array
-                    completed: false,     // Default value
+                    
                 };
                 break;
 
@@ -112,7 +112,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                     setType: shortText,   // Set the type directly
                     reps: 0,              // Default reps
                     weight: 0,            // Default weight
-                    completed: false,     // Default value
+                    
                 };
                 break;
 
@@ -156,7 +156,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                             <TableHead className="text-xs md:text-sm px-2">Previous</TableHead>
                             <TableHead className="text-xs md:text-sm px-2">Lbs</TableHead>
                             <TableHead className="text-xs md:text-sm px-2">Reps</TableHead>
-                            <TableHead className="text-xs md:text-sm text-right px-2">Status</TableHead>
+                            <TableHead className="text-xs md:text-sm text-right px-2">Volume</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody className="text-xs">

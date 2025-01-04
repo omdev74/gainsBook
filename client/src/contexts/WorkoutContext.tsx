@@ -22,13 +22,13 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                     {
                         "reps": 12,
                         "weight": 50,
-                        "completed": true,
+
                         "setType": "Normal"
                     },
                     {
                         "reps": 10,
                         "weight": 55,
-                        "completed": false,
+
                         "setType": "Normal"
                     },
                     {
@@ -42,7 +42,7 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                 "weight": 60
                             }
                         ],
-                        "completed": false,
+
                         "setType": "Drop"
                     },
                     {
@@ -56,7 +56,7 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                 "weight": 70
                             }
                         ],
-                        "completed": false,
+
                         "setType": "Myorep"
                     }
                 ]
@@ -72,7 +72,7 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                 "weight": 60
                             }
                         ],
-                        "completed": false,
+
                         "setType": "Drop"
                     }
                 ]
@@ -88,13 +88,13 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                             {
                                 "reps": 13,
                                 "weight": 50,
-                                "completed": true,
+
                                 "setType": "Normal"
                             },
                             {
                                 "reps": 10,
                                 "weight": 55,
-                                "completed": false,
+
                                 "setType": "Normal"
                             },
                         ]
@@ -106,13 +106,13 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                             {
                                 "reps": 12,
                                 "weight": 50,
-                                "completed": true,
+
                                 "setType": "Normal"
                             },
                             {
                                 "reps": 10,
                                 "weight": 55,
-                                "completed": false,
+
                                 "setType": "Normal"
                             },
                         ]
