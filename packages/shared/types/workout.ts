@@ -1,6 +1,5 @@
 // Base Interfaces for Sets
 
-import { Types } from "mongoose";
 
 interface BaseSet {
   index: number;
@@ -54,12 +53,12 @@ export interface Exercise {
   type: string;
 }
 
-export interface CustomExercise extends Document {
+export interface CustomExercise {
   name: string; // Name of the exercise
   equipment: string; // Equipment used for the exercise
   muscle: string; // Target muscle group
   type: string; // Type of exercise
-  userId: Types.ObjectId; // Reference to the user who created it
+  userId: string
 }
 export interface Superset {
   id: string; // Unique identifier for the superset
