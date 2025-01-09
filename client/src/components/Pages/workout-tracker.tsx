@@ -17,7 +17,7 @@ export default function WorkoutTrackershadcn() {
   return (
     <WorkoutProvider>
 
-      <div className=" max-w-4xl mx-auto">
+      <div className=" max-w-4xl mx-auto p-2.5 mb-32">
         <div className="space-y-6">
           <Timer />
           <EC_normal />

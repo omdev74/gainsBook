@@ -54,7 +54,7 @@ export default function WorkoutHistory() {
 
     return (
         <>
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-32">
                 <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Workout History</h1>
                 <div className="mb-4 sm:mb-6">
                     <Drawer onOpenChange={setIsDrawerOpen} open={isDrawerOpen}>

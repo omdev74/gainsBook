@@ -65,10 +65,11 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         }
 
         const newSet: WorkoutSet = {
+            index: workout.items[0].sets.lenght() + 1,
             setType: "Normal", // Default set type
             reps: 0,           // Default value
             weight: 0,         // Default value
-            
+
         };
 
         // Update the state to add the new set to the item with the name "Bench Press"
@@ -98,21 +99,23 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
             case "Drop":
             case "Myorep":
                 newSet = {
+                    index: workout.items[0].sets + 1,
                     setType: shortText,   // Set the type directly
                     drops: [{
                         reps: 0,              // Default reps
                         weight: 0
                     }],            // Initialize with an empty drops array
-                    
+
                 };
                 break;
 
             case "Warmup":
                 newSet = {
+                    index: workout.items[0].sets + 1,
                     setType: shortText,   // Set the type directly
                     reps: 0,              // Default reps
                     weight: 0,            // Default weight
-                    
+
                 };
                 break;
 

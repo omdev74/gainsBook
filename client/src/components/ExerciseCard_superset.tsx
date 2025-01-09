@@ -66,6 +66,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
         }
 
         const newSet: WorkoutSet = {
+            index: workout.items[2].sets + 1,
             setType: "Normal", // Default set type
             reps: 0,           // Default value
             weight: 0,         // Default value
@@ -99,6 +100,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
             case "Drop":
             case "Myorep":
                 newSet = {
+                    index: workout.items[0].sets + 1,
                     setType: shortText,   // Set the type directly
                     drops: [{
                         reps: 0,              // Default reps
@@ -110,6 +112,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
 
             case "Warmup":
                 newSet = {
+                    index: workout.items[0].sets + 1,
                     setType: shortText,   // Set the type directly
                     reps: 0,              // Default reps
                     weight: 0,            // Default weight

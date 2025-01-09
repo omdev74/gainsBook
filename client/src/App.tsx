@@ -7,6 +7,8 @@ import History from './components/Pages/History';
 import Exercises from './components/Pages/Exercises';
 import { Navbar } from './components/Navbar';
 import WorkoutState from './components/Pages/WorkoutState';
+import Login01Page from './components/Pages/Login';
+import SignUp01Page from './components/Pages/Signup';
 
 
 
@@ -18,7 +20,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Navbar />
 
-      <main className="p-2.5 mb-32">
+      <main className="">
 
 
         <Routes>
@@ -26,6 +28,9 @@ const App: React.FC = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/history" element={<History />} />
           <Route path="/exercises" element={<Exercises />} />
+          <Route path="/login" element={<Login01Page />} />
+          <Route path="/signup" element={<SignUp01Page />} />
+
           
         </Routes>
       </main>

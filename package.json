@@ -12,5 +12,8 @@
   "devDependencies": {
     "@svgr/cli": "^8.1.0",
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "mongoose": "^8.9.3"
   }
 }
