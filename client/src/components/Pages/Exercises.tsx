@@ -36,6 +36,8 @@ const muscleGroups = [
 export default function Exercises() {
     const [exercises, setExercises] = useState<Record<string, Exercise[]>>({});
 
+    console.log(exercises);
+
     useEffect(() => {
         const cachedExercises = localStorage.getItem("exercises");
 
@@ -64,6 +66,9 @@ export default function Exercises() {
                 .catch((error) => {
                     console.error("Error fetching data:", error);
                 });
+
+
+            
         }
 
         return () => {
