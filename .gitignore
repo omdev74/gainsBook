@@ -8,6 +8,7 @@ server/dist/
 
 test.js
 
+server/src/test.ts
 # Logs
 logs
 *.log
@@ -139,3 +140,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 test.js
+server/src/test.ts
+server/src/test.ts
+server/src/test.ts
