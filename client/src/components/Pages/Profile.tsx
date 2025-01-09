@@ -19,7 +19,7 @@ export default function Profile() {
     }
 
     return (
-        <>
+        <div className="mb-32">
             <div className="container mx-auto px-4 py-8">
                 <div className="flex flex-col md:flex-row justify-between items-center ">
                     <h1 className="text-3xl font-bold mb-4 md:mb-0">Dashboard</h1>
@@ -60,6 +60,6 @@ export default function Profile() {
 
             </div>
 
-        </>
+        </div>
     )
 }
