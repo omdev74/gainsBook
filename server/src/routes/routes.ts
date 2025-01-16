@@ -1,0 +1,75 @@
+import express, { Request, Response } from 'express';
+import { register, login} from '../controllers/authController';
+import Workout from '@/models/Workout';
+import { isAuthenticated } from '@/middlewares/isAuthenticated';
+
+const router = express.Router();
+
+
+router.get('/', (req, res) => {
+    res.json({ message: "Hello" });
+});
+
+router.get('/protected', isAuthenticated, (req, res) => {
+    res.json({ message: "Hello welcome to Protected Route" });
+});
+// Auth routes
+
+router.post('/register', register);
+router.post('/login', login);
+
+
+
+// create
+
+// read
+
+//upadte
+
+//delete 
+
+//other
+
+// user
+// create
+
+// read
+
+//upadte
+
+//delete 
+
+//other
+
+// workout
+// create
+
+// read
+
+router.get('/api/workout', async (req, res) => {
+    try {
+        const workouts = await Workout.find();  // Fetching all workouts
+        res.json(workouts);  // Returning the fetched workouts
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching workouts', error });
+    }
+});
+//upadte
+
+//delete 
+
+//other
+
+// exercises
+// create
+
+// read
+
+//upadte
+
+//delete 
+
+//other
+
+
+export default router;

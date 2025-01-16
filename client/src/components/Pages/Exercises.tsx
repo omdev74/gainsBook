@@ -6,6 +6,9 @@ import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { NavLink } from "react-router";
+import { Button } from "../ui/button";
+import { Settings } from "lucide-react";
 
 interface Exercise {
     name: string;
@@ -77,8 +80,16 @@ export default function Exercises() {
     }, []);
 
     return (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Exercise Groups</h1>
+        <div className="max-w-4xl mx-auto px-4 py-8 flex flex-col sm:px-6 lg:px-8 mb-32">
+            <nav className="bg-background sticky top-0 left-0 right-0 sm:hidden flex justify-between items-center z-10 p-2.5">
+                    <h2 className="text-xl font-bold md:mb-0 ">Exercise Groups</h2>
+                    <NavLink to="/settings">
+                        <Button variant="ghost" size="icon">
+                            <Settings className="h-5 w-5" />
+                        </Button>
+                    </NavLink>
+
+                </nav>
             <Accordion type="single" collapsible className="w-full space-y-4">
                 {muscleGroups.map((muscleGroup) => (
                     <AccordionItem key={muscleGroup} value={muscleGroup}>

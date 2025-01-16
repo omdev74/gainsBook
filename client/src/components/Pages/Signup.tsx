@@ -17,11 +17,28 @@ import { NavLink } from "react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Dumbbell } from "lucide-react";
+const backednURI = import.meta.env.VITE_BACKEND_URI;
+
 
 const formSchema = z.object({
-    email: z.string().email(),
+    name: z.string()
+        .min(1, "Name is required")
+        .max(50, "Name should not exceed 50 characters")
+        .regex(/^[A-Za-z\s]+$/, "Name can only contain letters and spaces"),
+    email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
+    confirmPassword: z.string().min(8, "Password must be at least 8 characters long")
+}).superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+        ctx.addIssue({
+            code: "custom",
+            message: "The passwords did not match",
+            path: ['confirmPassword']
+        });
+    }
 });
+
+
 
 const SignUp01Page = () => {
     const form = useForm<z.infer<typeof formSchema>>({
@@ -32,9 +49,36 @@ const SignUp01Page = () => {
         resolver: zodResolver(formSchema),
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        try {
+            // Destructure the necessary fields
+            const { email, password, name } = data;
+
+            // Prepare the data to send to the backend
+            const response = await fetch(`${backednURI}/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, email, password }), // Send name, email, and password
+            });
+
+            // Handle response
+            if (response.ok) {
+                const result = await response.json();
+                console.log("User registered successfully:", result);
+                // You can navigate to a new page or show a success message
+            } else {
+                const error = await response.json();
+                console.error("Registration failed:", error.message);
+                // Handle the error (show the error message to the user)
+            }
+        } catch (error) {
+            console.error("An error occurred during registration:", error);
+            // Handle the error (show the error message to the user)
+        }
     };
+
 
     return (
         <div className="min-h-screen flex items-center justify-center">
@@ -44,7 +88,7 @@ const SignUp01Page = () => {
                     Log in to GainsBook
                 </p>
 
-                <Button className="mt-8 w-full gap-3"  variant="secondary">
+                <Button className="mt-8 w-full gap-3" variant="secondary">
                     <GoogleLogo />
                     Continue with Google
                 </Button>
@@ -60,6 +104,24 @@ const SignUp01Page = () => {
                         className="w-full space-y-4"
                         onSubmit={form.handleSubmit(onSubmit)}
                     >
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            placeholder="Name"
+                                            className="w-full"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="email"
@@ -96,6 +158,25 @@ const SignUp01Page = () => {
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="confirmPassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            placeholder="Confirm Password"
+                                            className="w-full"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <Button type="submit" className="mt-4 w-full">
                             Continue with Email
                         </Button>

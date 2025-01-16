@@ -30,9 +30,12 @@ export function Navbar() {
                         </div>
                         <div className="flex items-center">
                             <ModeToggle />
-                            <Button variant="ghost" size="icon">
-                                <Settings className="h-5 w-5" />
-                            </Button>
+                            <NavLink to="/settings">
+                                <Button variant="ghost" size="icon">
+                                    <Settings className="h-5 w-5" />
+                                </Button>
+                            </NavLink>
+
                             <NavLink to="/profile">
                                 <Avatar className="ml-3">
                                     <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />

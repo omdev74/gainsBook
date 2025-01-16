@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useContext } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -13,10 +14,13 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dumbbell } from "lucide-react";
-
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router";
 import { z } from "zod";
+import { useNavigate } from "react-router";
+import { AuthContext } from "@/contexts/AuthContext"; // Update the import path as needed
+
+const backednURI = import.meta.env.VITE_BACKEND_URI;
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -24,6 +28,9 @@ const formSchema = z.object({
 });
 
 const Login01Page = () => {
+    const navigate = useNavigate();
+    const { isLoggedIn, login, logout } = useContext(AuthContext);
+
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
             email: "",
@@ -32,8 +39,33 @@ const Login01Page = () => {
         resolver: zodResolver(formSchema),
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        try {
+            const response = await fetch(`${backednURI}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log("Login successful:", result);
+
+                // Use the login function from AuthContext
+                login(result.token, result.user);
+
+                // Redirect to the profile page
+                navigate("/profile");
+            } else {
+                const errorText = await response.text();
+                console.error("Login failed:", errorText);
+                alert("Login failed: " + errorText);
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }
     };
 
     return (

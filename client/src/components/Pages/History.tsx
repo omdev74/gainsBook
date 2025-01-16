@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { format, isSameDay, isSameSecond } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -15,6 +15,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NavLink } from "react-router";
 
 // Mock data for workouts
 const workouts = [
@@ -53,9 +54,18 @@ export default function WorkoutHistory() {
 
 
     return (
-        <>
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-32">
-                <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Workout History</h1>
+        <div className="mb-32">
+            <div className="max-w-4xl mx-auto px-4 py-8 flex flex-col sm:px-6 lg:px-8 mb-32">
+            <nav className="bg-background sticky top-0 left-0 right-0 sm:hidden flex justify-between items-center z-10 p-2.5">
+                    <h2 className="text-xl font-bold md:mb-0 ">Workout History</h2>
+                    <NavLink to="/settings">
+                        <Button variant="ghost" size="icon">
+                            <Settings className="h-5 w-5" />
+                        </Button>
+                    </NavLink>
+
+                </nav>
+                <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 hidden">Workout History</h1>
                 <div className="mb-4 sm:mb-6">
                     <Drawer onOpenChange={setIsDrawerOpen} open={isDrawerOpen}>
                         <DrawerTrigger asChild>
@@ -143,6 +153,6 @@ export default function WorkoutHistory() {
                         })}
                 </div>
             </div>
-        </>
+        </div>
     );
 }
