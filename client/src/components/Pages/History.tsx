@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { format, isSameDay, isSameSecond } from "date-fns";
 import { CalendarIcon, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/drawer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { NavLink } from "react-router";
-
+import { AuthContext } from "@/contexts/AuthContext";
+const backendURI = import.meta.env.VITE_BACKEND_URI;
 // Mock data for workouts
 const workouts = [
     { id: 1, name: "Full Body Workout", date: new Date(2024, 11, 15, 10, 30), exercises: ["Squats", "Bench Press", "Deadlifts"] },
@@ -29,6 +30,41 @@ export default function WorkoutHistory() {
     const [date, setDate] = useState<Date | undefined>(undefined);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const cardRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+
+    useEffect(() => {
+        const fetchWorkouts = async () => {
+            try {
+                // Access the authToken from the AuthContext
+                const { isLoggedIn } = useContext(AuthContext);
+                const authToken = isLoggedIn ? localStorage.getItem("authToken") : null;
+    
+                if (!authToken) {
+                    throw new Error("User is not logged in or token is missing");
+                }
+    
+                const response = await fetch(`${backendURI}/workouts`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${authToken}`, // Add the token here
+                    },
+                    
+                });
+    
+                if (!response.ok) {
+                    throw new Error("Failed to fetch workouts");
+                }
+    
+                const result = await response.json();
+                console.log("Fetched workouts:", result); // Process the result
+            } catch (error) {
+                console.error("Error fetching workouts:", error);
+            }
+        };
+    
+        fetchWorkouts(); // Call the async function
+    }, []);
 
     // Scroll to the workout card when a date is selected
     const handleDateSelect = (selectedDate: Date | undefined) => {
@@ -56,7 +92,7 @@ export default function WorkoutHistory() {
     return (
         <div className="mb-32">
             <div className="max-w-4xl mx-auto px-4 py-8 flex flex-col sm:px-6 lg:px-8 mb-32">
-            <nav className="bg-background sticky top-0 left-0 right-0 sm:hidden flex justify-between items-center z-10 p-2.5">
+                <nav className="bg-background sticky top-0 left-0 right-0 sm:hidden flex justify-between items-center z-10 p-2.5">
                     <h2 className="text-xl font-bold md:mb-0 ">Workout History</h2>
                     <NavLink to="/settings">
                         <Button variant="ghost" size="icon">

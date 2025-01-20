@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { register, login} from '../controllers/authController';
 import Workout from '@/models/Workout';
 import { isAuthenticated } from '@/middlewares/isAuthenticated';
+import {createSampleWorkout,getWorkoutsByUserId} from '@/controllers/workoutController';
 
 const router = express.Router();
 
@@ -44,7 +45,14 @@ router.post('/login', login);
 // workout
 // create
 
+
+router.post("/createsampleworkout",isAuthenticated,createSampleWorkout)
 // read
+
+router.get("/workouts", isAuthenticated,getWorkoutsByUserId);
+
+
+
 
 router.get('/api/workout', async (req, res) => {
     try {

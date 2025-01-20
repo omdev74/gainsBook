@@ -1,18 +1,52 @@
-// backend/models/Exercise.ts
-import mongoose, { Schema } from 'mongoose';
-import { Exercise } from '@shared/types/workout'; // Import shared types
+import mongoose from "mongoose";
 
-export const DefaultExerciseSchema = new Schema<Exercise>({
-    name: { type: String, required: true },
-    difficulty: { type: String, required: true },  // Difficulty level of the exercise
-    equipment: { type: String, required: true },   // Equipment used for the exercise
-    instructions: { type: String, required: true }, // Instructions for the exercise
-    muscle: { type: String, required: true },      // Target muscle group
-    type: { type: String, required: true },        // Type of exercise ('strength', 'cardio', etc.)
-}, { timestamps: true }); // Adding timestamps for createdAt and updatedAt
+// Define the schema for the exercise data
+const ExerciseSchema = new mongoose.Schema(
+    {
+        uuid: { type: String, required: true, unique: true }, // Exercise unique ID
+        name: { type: String, required: true }, // Name of the exercise
+        category: {
+            id: { type: Number, required: true },  // Category id
+            name: { type: String, required: true },  // Category name
+        },
+        equipment: [
+            {
+                id: { type: Number, required: true }, // Equipment ID
+                name: { type: String, required: true }, // Equipment name
+            },
+        ],
+        muscles: [
+            {
+                id: { type: Number, required: true }, // Muscle ID
+                name: { type: String, required: true }, // Primary muscle group
+            },
+        ],
+        secondaryMuscles: [
+            {
+                id: { type: Number, required: true }, // Secondary muscle ID
+                name: { type: String, required: true }, // Secondary muscle group
+            },
+        ],
+        description: { type: String, required: true }, // Description of the exercise
+        images: [
+            {
+                id: { type: Number, required: true }, // Image ID
+                image: { type: String, required: true }, // Image URL
+                isMain: { type: Boolean, required: true }, // Flag if it's the main image
+            },
+        ],
+        videos: [
+            {
+                id: { type: Number, required: true }, // Video ID
+                video: { type: String, required: true }, // Video URL
+                isMain: { type: Boolean, required: true }, // Flag if it's the main video
+            },
+        ],
+    },
+    { timestamps: true } // Automatically add createdAt and updatedAt fields
+);
 
-
-const DefaultExerciseModel = mongoose.model('Exercise', DefaultExerciseSchema);
+// Create the model
+const DefaultExerciseModel = mongoose.model('DefaultExercise', ExerciseSchema);
 
 export default DefaultExerciseModel;
-

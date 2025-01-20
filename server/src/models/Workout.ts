@@ -2,6 +2,7 @@ import mongoose, { Schema, model } from 'mongoose';
 
 export const WorkoutSchema = new Schema(
   {
+    Title: { type: String, required: true },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     date: { type: Date, required: true },
     notes: { type: String },
@@ -16,9 +17,14 @@ export const WorkoutSchema = new Schema(
           type: Schema.Types.Mixed, // Additional data, such as Regularsets or superset details
           required: false,
         },
-        ExerciseNote: { type: Schema.Types.ObjectId, ref: "ExerciseNote", required: false, default: null, }
+        ExerciseNote: { type: Schema.Types.ObjectId, ref: "ExerciseNote", required: false, default: null, },
+
+
       },
     ],
+    TotalVolume: { type: Number, required: true },
+    TotalSets: { type: Number, required: true },
+    TotalExercises: { type: Number, required: true },
   },
   { timestamps: true }
 );

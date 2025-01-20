@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -20,7 +20,7 @@ import { z } from "zod";
 import { useNavigate } from "react-router";
 import { AuthContext } from "@/contexts/AuthContext"; // Update the import path as needed
 
-const backednURI = import.meta.env.VITE_BACKEND_URI;
+const backendURI = import.meta.env.VITE_BACKEND_URI;
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -39,9 +39,17 @@ const Login01Page = () => {
         resolver: zodResolver(formSchema),
     });
 
+    useEffect(()=>{
+
+        if(isLoggedIn){
+            navigate("/profile");
+        }
+
+    },[])
+
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
-            const response = await fetch(`${backednURI}/login`, {
+            const response = await fetch(`${backendURI}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

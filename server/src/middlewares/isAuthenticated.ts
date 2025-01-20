@@ -12,6 +12,8 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string); // Verify the token
     req.user = decoded; // Attach the decoded token payload to req.user for use in the route
+    console.log(req.user);
+    console.log(decoded);
     next();
   } catch (error) {
     res.status(403).json({ message: 'Unauthorized: Invalid or expired token.' });

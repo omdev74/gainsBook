@@ -11,10 +11,13 @@ import Login01Page from './components/Pages/Login';
 import SignUp01Page from './components/Pages/Signup';
 import Settings from './components/Pages/Settings';
 import ProtectedRoute from './components/ProtectedRoute';
+import WorkoutHistoryCustom from './components/Pages/WorkoutHistoryCustom';
+import WorkoutHistory from './components/Pages/History';
+import Exercise from './components/Pages/Exercise';
+import ExercisesCustom from './components/Pages/ExercisesCustom';
 
 const App: React.FC = () => {
-  const location = useLocation();  // Get the current route
-  console.log(location.pathname);
+
 
   return (
 
@@ -25,14 +28,19 @@ const App: React.FC = () => {
 
           <Route path="/login" element={<Login01Page />} />
           <Route path="/signup" element={<SignUp01Page />} />
+          <Route path="/exercise" element={<Exercise />} />
           <Route path="/settings" element={<Settings />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<WorkoutTrackershadcn />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/exercises" element={<Exercises />} />
+            <Route path="/history" element={<WorkoutHistoryCustom />} />
+            <Route path="/historyd" element={<WorkoutHistory />} />
+            <Route path="/exercisesyd" element={<Exercises />} />
+
+            <Route path="/exercises" element={<ExercisesCustom />} />
+
           </Route>
         </Routes>
       </main></>

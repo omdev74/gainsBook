@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, LabelList, ResponsiveContainer, XAxis, YAxis } from "recharts"
 import {
     ChartConfig,
     ChartContainer,
@@ -34,8 +34,15 @@ export function WeeklyChart() {
                     cursor={false}
                     content={<ChartTooltipContent hideLabel />}
                 />
-                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
-                <Bar dataKey="workouts" fill="currentColor" radius={[4, 4, 0, 0]} className="fill-primary" />
+
+                <Bar dataKey="workouts" fill="currentColor" radius={[4, 4, 0, 0]} className="fill-primary" >
+                    <LabelList
+                        position="top"
+                        offset={12}
+                        className="fill-foreground"
+                        fontSize={12}
+                    />
+                </Bar>
             </BarChart>
         </ChartContainer>
     )
