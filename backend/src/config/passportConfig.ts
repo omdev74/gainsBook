@@ -14,7 +14,7 @@ const jwtOptions = {
 };
 
 passport.use(
-  new JwtStrategy(jwtOptions, async (jwtPayload: JwtPayload, done) => {
+  new JwtStrategy(jwtOptions, async (jwtPayload: JwtPayload, done:any) => {
     try {
       // Find the user by ID in the JWT payload
       const user = await UserModel.findById(jwtPayload.id);

@@ -1,14 +1,14 @@
 import express, { Request, Response } from 'express';
 import { register, login} from '../controllers/authController';
-import Workout from '@/models/Workout';
-import { isAuthenticated } from '@/middlewares/isAuthenticated';
-import {createSampleWorkout,getWorkoutsByUserId} from '@/controllers/workoutController';
+import Workout from '../models/Workout';
+import { isAuthenticated } from '../middlewares/isAuthenticated';
+import {createSampleWorkout,getWorkoutsByUserId} from '../controllers/workoutController';
 
 const router = express.Router();
 
 
 router.get('/', (req, res) => {
-    res.json({ message: "Hello" });
+    res.json({ message: "Hello this is form the routes" });
 });
 
 router.get('/protected', isAuthenticated, (req, res) => {

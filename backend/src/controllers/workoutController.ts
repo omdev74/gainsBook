@@ -1,6 +1,6 @@
-import CustomExerciseModel from "@/models/CustomExercise";
-import DefaultExerciseModel from "@/models/DefaultExercise";
-import WorkoutModel from "@/models/Workout";
+import CustomExerciseModel from "../models/CustomExercise";
+import DefaultExerciseModel from "../models/DefaultExercise";
+import WorkoutModel from "../models/Workout";
 
 import { Request, Response, NextFunction } from 'express';
 
