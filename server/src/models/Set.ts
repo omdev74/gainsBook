@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { WorkoutSet } from "@shared/types/workout";
+
 import { number } from 'zod';
 
 // DropSchema for Myorep and Drop sets
@@ -9,7 +9,7 @@ const DropSchema = new Schema({
 });
 
 // SetSchema for individual sets in exercises or supersets
-const SetSchema = new Schema<WorkoutSet>({
+const SetSchema = new Schema({
     index: { type: Number },
     setType: {
         type: String,

@@ -51,3 +51,4 @@ const startServer = async () => {
 };
 
 startServer();  // Call to start the server once after DB connection is established
+export default app;

@@ -12,9 +12,9 @@
     "paths": {
       "@/*": ["./src/*"], // Pointing to src folder inside the server directory
       "@shared/*": ["../packages/shared/*"] // Correct path to shared
-    }
+    },
+    "outDir": "./dist"
   },
-  "include": ["src"], // Ensure to include the src folder where your code is
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", "./api/*.ts"], // Ensure to include the src folder where your code is
+  "exclude": ["node_modules", "build"]
 }
-

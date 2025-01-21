@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { WorkoutSet } from '@shared/types/workout'; // Import shared types
+
 
 // Define the Zod schema for individual sets
 const SetSchema = z.object({

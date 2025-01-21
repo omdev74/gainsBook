@@ -1,7 +1,7 @@
-import { CustomExercise } from '@shared/types/workout';
+
 import mongoose, { Schema, Types } from 'mongoose';
 
-export const CustomExerciseSchema = new Schema<CustomExercise>(
+export const CustomExerciseSchema = new Schema(
     {
         name: { type: String, required: true },
         equipment: { type: String, required: true }, // Equipment used for the exercise
