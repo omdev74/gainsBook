@@ -13,35 +13,27 @@ export default defineConfig({
     manifest: {
       name: 'GainsBook',
       short_name: 'GainsBook',
-      description: 'A Workout logger , where lives all your progress',
-      theme_color: '#FFFFFF',
+      description: 'A Workout logger, where lives all your progress',
+      theme_color: '#000000',
       icons: [
         {
-          "src": "icons/manifest-icon-192.maskable.png",
-          "sizes": "192x192",
-          "type": "image/png",
-          "purpose": "any"
+          src: '/icons/web-app-manifest-192x192.png',
+          sizes: '192x192',
+          type: 'image/png',
         },
         {
-          "src": "icons/manifest-icon-192.maskable.png",
-          "sizes": "192x192",
-          "type": "image/png",
-          "purpose": "maskable"
+          src: '/icons/web-app-manifest-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
         },
         {
-          "src": "icons/manifest-icon-512.maskable.png",
-          "sizes": "512x512",
-          "type": "image/png",
-          "purpose": "any"
+          src: '/icons/apple-touch-icon.png',
+          sizes: '180x180',
+          type: 'image/png',
         },
-        {
-          "src": "icons/manifest-icon-512.maskable.png",
-          "sizes": "512x512",
-          "type": "image/png",
-          "purpose": "maskable"
-        }
       ],
-    },
+    }
+    ,
     workbox: {
       runtimeCaching: [
         {
