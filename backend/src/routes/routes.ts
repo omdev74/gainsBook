@@ -8,6 +8,7 @@ const router = express.Router();
 
 
 router.get('/', (req, res) => {
+    console.log(req);
     res.json({ message: "Hello this is form the routes" });
 });
 

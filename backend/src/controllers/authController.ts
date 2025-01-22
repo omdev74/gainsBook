@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import UserModel from '../models/User';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -34,16 +34,18 @@ export const login = async (req: Request, res: Response): Promise<any> => {
     try {
         const { email, password } = req.body;
 
+        console.log(req.body);
+
         // Check if user exists
         const user = await UserModel.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'Invalid email or password' });
+            return res.status(400).json({ message: `Invalid email or password ${email}` });
         }
 
         // Verify the password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid email or password' });
+            return res.status(400).json({ message: 'password' });
         }
 
         // Generate JWT token
@@ -52,8 +54,14 @@ export const login = async (req: Request, res: Response): Promise<any> => {
         });
 
         res.status(200).json({ token, user });
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error', error });
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Login error:', error.message);
+            res.status(500).json({ message: 'Internal server error', error: error.message });
+        } else {
+            console.error('Unexpected error:', error);
+            res.status(500).json({ message: 'An unknown error occurred' });
+        }
     }
 };
 

@@ -13,10 +13,7 @@ const app = express();
 
 // Enable CORS for specific origin
 app.use(
-  cors({
-    origin: 'https://gainsbook.netlify.app', // Allow only your Netlify frontend
-    credentials: true, // Allow cookies and headers for authentication
-  })
+  cors()
 );
 
 // Session middleware
@@ -31,11 +28,12 @@ app.use(
 // Initialize Passport after session setup
 app.use(passport.initialize());
 app.use(passport.session());
-
 // Middleware for parsing JSON bodies
 app.use(express.json());
 
 // Use routes for all requests
 app.use("/", router);
+
+connectDB();
 
 export default app;
