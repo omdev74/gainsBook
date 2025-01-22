@@ -15,6 +15,7 @@ export default defineConfig({
       short_name: 'GainsBook',
       description: 'A Workout logger, where lives all your progress',
       theme_color: '#000000',
+      background_color:"#000000",
       icons: [
         {
           src: '/icons/web-app-manifest-192x192.png',
