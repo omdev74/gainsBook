@@ -1,12 +1,14 @@
 import React, { createContext, useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 interface AuthContextType {
   isLoggedIn: boolean;
   login: (token: string, user: object) => void;
   logout: () => void;
-  validateToken: () => void; // Optional re-validation method
-  token: string
+  validateToken: () => void;
+  token: string | null;
+  user: object | null;
+  loading: boolean;
 }
 
 // Default values for the context
@@ -15,14 +17,18 @@ const defaultAuthContext: AuthContextType = {
   login: () => console.warn("AuthContext.login() is not initialized."),
   logout: () => console.warn("AuthContext.logout() is not initialized."),
   validateToken: () => console.warn("AuthContext.validateToken() is not initialized."),
-  token: ""
+  token: null,
+  user: null,
+  loading: true,
 };
 
 export const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<object | null>(null);
+  const [loading, setLoading] = useState(true);
 
   // Helper function to check if a token is expired
   const isTokenExpired = (token: string): boolean => {
@@ -31,54 +37,67 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const now = Math.floor(Date.now() / 1000);
       return exp < now;
     } catch (error) {
+      console.error("Invalid token:", error);
       return true;
     }
   };
 
   // Validate token on app load
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      if (isTokenExpired(token)) {
-        console.log("Token expired. Logging out...");
-        logout();
-      } else {
-        setIsLoggedIn(true);
-        setToken(token);
+    const storedToken = localStorage.getItem("authToken");
+    const storedUser = localStorage.getItem("user");
 
-      }
+    if (storedToken && !isTokenExpired(storedToken)) {
+      setToken(storedToken);
+      setUser(storedUser ? JSON.parse(storedUser) : null);
+      setIsLoggedIn(true);
+    } else if (storedToken) {
+      console.log("Token expired on app load. Logging out...");
+      logout();
     }
-  }, []); // Run only on initial load
+
+    setLoading(false); // Authentication check completed
+  }, []);
 
   const login = (token: string, user: object) => {
     localStorage.setItem("authToken", token);
     localStorage.setItem("user", JSON.stringify(user));
-    setIsLoggedIn(true);
     setToken(token);
+    setUser(user);
+    setIsLoggedIn(true);
   };
 
   const logout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
+    setToken(null);
+    setUser(null);
     setIsLoggedIn(false);
-    setToken("");
   };
 
   const validateToken = () => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      if (isTokenExpired(token)) {
-        console.log("Token expired during validation. Logging out...");
-        logout();
-      } else {
-        setIsLoggedIn(true);
-      }
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken && !isTokenExpired(storedToken)) {
+      setIsLoggedIn(true);
+    } else {
+      console.log("Token expired during validation. Logging out...");
+      logout();
     }
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, validateToken, token }}>
-      {children}
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        login,
+        logout,
+        validateToken,
+        token,
+        user,
+        loading,
+      }}
+    >
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

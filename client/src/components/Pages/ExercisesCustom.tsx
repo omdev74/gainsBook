@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -17,8 +17,10 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { useExercises } from "@/hooks/useExercises"
-import { Dumbbell, Filter } from "lucide-react"
+import { Dumbbell, Filter, Loader2 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import Loader from "../ui/loader"
+import { NavLink } from "react-router"
 
 export default function ExercisesCustom() {
     const {
@@ -31,8 +33,11 @@ export default function ExercisesCustom() {
         setMuscleFilter,
         sortBy,
         setSortBy,
+        loading,
+        error,
         uniqueEquipment,
         uniqueMuscles,
+
     } = useExercises()
 
     const [activeFilter, setActiveFilter] = useState<"equipment" | "muscle">("equipment")
@@ -42,6 +47,7 @@ export default function ExercisesCustom() {
         const currentFilter = type === "equipment" ? equipmentFilter : muscleFilter
         setFilter(currentFilter.includes(filter) ? currentFilter.filter((f) => f !== filter) : [...currentFilter, filter])
     }
+
 
     return (
         <div className="flex flex-col h-screen">
@@ -60,7 +66,7 @@ export default function ExercisesCustom() {
                         <div className="flex w-full sm:w-1/3 gap-2">
                             <Drawer>
                                 <DrawerTrigger asChild>
-                                    <Button variant="outline" className="flex-1" onClick={() => setActiveFilter("muscle")}>
+                                    <Button variant="secondary" className="flex-1" onClick={() => setActiveFilter("muscle")}>
                                         <Filter className="mr-2 h-4 w-4" /> Muscles
                                     </Button>
                                 </DrawerTrigger>
@@ -85,7 +91,7 @@ export default function ExercisesCustom() {
                             </Drawer>
                             <Drawer>
                                 <DrawerTrigger asChild>
-                                    <Button variant="outline" className="flex-1" onClick={() => setActiveFilter("equipment")}>
+                                    <Button variant="secondary" className="flex-1" onClick={() => setActiveFilter("equipment")}>
                                         <Dumbbell className="mr-2 h-4 w-4" /> Equipment
                                     </Button>
                                 </DrawerTrigger>
@@ -116,26 +122,44 @@ export default function ExercisesCustom() {
 
             <div className="flex-grow overflow-y-auto">
                 <ul className="container mx-auto px-4 py-4 space-y-4">
-                    {exercises.map((exercise) => (
-                        <li key={exercise.id} className="flex items-center space-x-4 p-2 rounded-lg shadow-sm">
 
-                            <Avatar>
-                                <AvatarImage />
-                                <AvatarFallback>{exercise.name.split(" ").map(word => word[0].toUpperCase()).join("")}</AvatarFallback>
-                            </Avatar>
 
-                            <div className="flex-grow">
-                                <h2 className="text-lg font-semibold">{exercise.name}</h2>
-                                <div className="flex flex-wrap gap-2 mt-1">
-                                    <Badge variant="secondary">{exercise.muscle}</Badge>
-                                    <Badge variant="outline">{exercise.equipment}</Badge>
-                                </div>
-                            </div>
-                            <div className="text-sm text-gray-500">{exercise.sets} sets</div>
-                        </li>
-                    ))}
+                    {loading ? (
+                        <Loader />
+                    ) : exercises && exercises.length > 0 ? (
+                        <>{exercises.map((exercise) => (
+                            <li
+                                key={exercise.id}
+                            >
+                                <NavLink to={`/exercise/${exercise.id}`} className="flex w-full space-x-4 p-2  rounded-lg shadow-sm items-center" > {/* Use w-full for full width */}
+                                    <Avatar className="">
+                                        <AvatarImage />
+                                        <AvatarFallback>
+                                            {exercise.name.split(" ").slice(0, 2).map(word => word[0].toUpperCase()).join("")}
+                                        </AvatarFallback>
+                                    </Avatar>
+
+                                    <div className="flex-grow">
+                                        <h2 className="text-lg font-semibold">{exercise.name}</h2>
+                                        <div className="flex flex-wrap gap-2 mt-1">
+                                            <Badge variant="secondary">{exercise.muscle}</Badge>
+
+                                            {exercise.equipment.length > 0 ? (
+                                                <Badge variant="outline">{exercise.equipment[0].name}</Badge>
+                                            ) : null}
+                                        </div>
+                                    </div>
+                                    <div className="text-sm text-gray-500">{exercise.sets} sets</div>
+                                </NavLink>
+                            </li>
+                        ))
+                        }</>
+                    ) : exercises ? (
+                        <p>{error}</p>
+                    ) : null}
                 </ul>
             </div>
+
         </div>
     )
 }

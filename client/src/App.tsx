@@ -38,7 +38,7 @@ const App: React.FC = () => {
             <Route path="/history" element={<WorkoutHistoryCustom />} />
             <Route path="/historyd" element={<WorkoutHistory />} />
             <Route path="/exercisesyd" element={<Exercises />} />
-
+            <Route path="/exercise/:id" element={<Exercise />} />
             <Route path="/exercises" element={<ExercisesCustom />} />
 
           </Route>

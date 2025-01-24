@@ -1,125 +1,117 @@
-import { useState, useMemo } from "react"
+import { useState, useEffect, useMemo, useContext } from "react";
+import { AuthContext } from "@/contexts/AuthContext";
+import axios from "axios";
 
 type Exercise = {
-  id: number
-  name: string
-  equipment: string
-  muscle: string
-  sets: number
-  imageUrl: string
-}
+  id: string; // Using string because _id is in MongoDB ObjectId format
+  name: string;
+  equipment: { id: number; name: string;[key: string]: unknown; }[]; // Updated to match the returned data
+  muscle: string; // Derived from category.name
+  sets: number;
+  description: string;
+  imageUrl: string; // You may need to map this from `images` if it exists
+};
 
-const mockExercises: Exercise[] = [
-  {
-    id: 1,
-    name: "Push-ups",
-    equipment: "Bodyweight",
-    muscle: "Chest",
-    sets: 3,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 2,
-    name: "Squats",
-    equipment: "Bodyweight",
-    muscle: "Legs",
-    sets: 4,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 3,
-    name: "Dumbbell Curls",
-    equipment: "Dumbbells",
-    muscle: "Biceps",
-    sets: 3,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 4,
-    name: "Bench Press",
-    equipment: "Barbell",
-    muscle: "Chest",
-    sets: 5,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 5,
-    name: "Deadlifts",
-    equipment: "Barbell",
-    muscle: "Back",
-    sets: 4,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 6,
-    name: "Lat Pulldowns",
-    equipment: "Cable Machine",
-    muscle: "Back",
-    sets: 3,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 7,
-    name: "Leg Press",
-    equipment: "Machine",
-    muscle: "Legs",
-    sets: 4,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 8,
-    name: "Plank",
-    equipment: "Bodyweight",
-    muscle: "Core",
-    sets: 2,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 9,
-    name: "Tricep Pushdowns",
-    equipment: "Cable Machine",
-    muscle: "Triceps",
-    sets: 3,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 10,
-    name: "Shoulder Press",
-    equipment: "Dumbbells",
-    muscle: "Shoulders",
-    sets: 4,
-    imageUrl: "/placeholder.svg?height=100&width=100",
-  },
-]
+const backendURI = import.meta.env.VITE_BACKEND_URI;
 
 export function useExercises() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [equipmentFilter, setEquipmentFilter] = useState<string[]>([])
-  const [muscleFilter, setMuscleFilter] = useState<string[]>([])
-  const [sortBy, setSortBy] = useState<"name" | "sets">("name")
+  const { token, isLoggedIn } = useContext(AuthContext);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredAndSortedExercises = useMemo(() => {
-    return mockExercises
-      .filter(
-        (exercise) =>
-          exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          (equipmentFilter.length === 0 || equipmentFilter.includes(exercise.equipment)) &&
-          (muscleFilter.length === 0 || muscleFilter.includes(exercise.muscle)),
-      )
-      .sort((a, b) => {
-        if (sortBy === "name") {
-          return a.name.localeCompare(b.name)
+  // Filters and Sorting States
+  const [searchTerm, setSearchTerm] = useState("");
+  const [equipmentFilter, setEquipmentFilter] = useState<string[]>([]);
+  const [muscleFilter, setMuscleFilter] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<"name" | "sets">("name");
+
+  useEffect(() => {
+    if (!isLoggedIn || !token) {
+      setExercises([]); // Clear exercises when logged out
+      setError(null);
+      return;
+    }
+
+    const fetchExercises = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await axios.get(`${backendURI}/exercises`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        // Map backend data to your frontend format
+        const mappedExercises = response.data.map((exercise: any) => ({
+          id: exercise.uuid || exercise._id?.$oid || "unknown-id",
+          name: exercise.name ?? "Unknown Name",
+          equipment: exercise.equipment ?? [],
+          muscle: exercise.category?.name ?? "Unknown",
+          sets: exercise.sets ?? 0,
+          description: exercise.description ?? "No description provided.",
+          imageUrl: exercise.images?.[0] ?? "",
+        }));
+
+        setExercises(mappedExercises);
+      } catch (err: any) {
+        if (err.response?.status === 401) {
+          setError("Unauthorized: Please log in again.");
+        } else if (!err.response) {
+          setError("Network error: Unable to fetch data.");
         } else {
-          return b.sets - a.sets
+          setError(err.response?.data?.message || "Failed to fetch exercises.");
         }
-      })
-  }, [searchTerm, equipmentFilter, muscleFilter, sortBy])
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const uniqueEquipment = [...new Set(mockExercises.map((e) => e.equipment))]
-  const uniqueMuscles = [...new Set(mockExercises.map((e) => e.muscle))]
+    fetchExercises();
+  }, [isLoggedIn, token]);
+
+  // Filter and Sort Logic
+  const filteredAndSortedExercises = useMemo(() => {
+    if (!Array.isArray(exercises)) return [];
+    return exercises
+      .filter((exercise) => {
+        const equipmentNames = exercise.equipment.map((eq) => eq.name.toLowerCase());
+        return (
+          exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          (equipmentFilter.length === 0 || equipmentFilter.some((filter) => equipmentNames.includes(filter.toLowerCase()))) &&
+          (muscleFilter.length === 0 || muscleFilter.includes(exercise.muscle))
+        );
+      })
+      .sort((a, b) => (sortBy === "name" ? a.name.localeCompare(b.name) : b.sets - a.sets));
+  }, [exercises, searchTerm, equipmentFilter, muscleFilter, sortBy]);
+
+  const getExerciseById = async (id: string) => {
+
+    if (exercises.length > 0) {
+      // console.log(`id provided in the hook ${id} when ${exercises}`);
+      return exercises.find(exercise => exercise.id === id);
+    }
+  };
+  // Unique Equipment and Muscles
+  const uniqueEquipment = useMemo(() => {
+    const equipmentSet = new Set<string>();
+    exercises.forEach((exercise) => {
+      exercise.equipment.forEach((eq) => equipmentSet.add(eq.name));
+    });
+    return Array.from(equipmentSet);
+  }, [exercises]);
+
+
+  const uniqueMuscles = useMemo(() => {
+    return Array.from(new Set(exercises.map((e) => e.muscle)));
+  }, [exercises]);
 
   return {
     exercises: filteredAndSortedExercises,
+    loading,
+    error,
     searchTerm,
     setSearchTerm,
     equipmentFilter,
@@ -130,6 +122,6 @@ export function useExercises() {
     setSortBy,
     uniqueEquipment,
     uniqueMuscles,
-  }
+    getExerciseById
+  };
 }
-

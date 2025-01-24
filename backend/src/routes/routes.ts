@@ -3,6 +3,7 @@ import { register, login} from '../controllers/authController';
 import Workout from '../models/Workout';
 import { isAuthenticated } from '../middlewares/isAuthenticated';
 import {createSampleWorkout,getWorkoutsByUserId} from '../controllers/workoutController';
+import DefaultExerciseModel from '../models/DefaultExercise';
 
 const router = express.Router();
 
@@ -53,7 +54,14 @@ router.post("/createsampleworkout",isAuthenticated,createSampleWorkout)
 router.get("/workouts", isAuthenticated,getWorkoutsByUserId);
 
 
-
+router.get('/exercises', async (req, res) => {
+    try {
+        const exercises = await DefaultExerciseModel.find();  // Fetching all exercises
+        res.json(exercises);  // Returning the fetched exercises
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching exercises', error });
+    }
+});
 
 router.get('/api/workout', async (req, res) => {
     try {
