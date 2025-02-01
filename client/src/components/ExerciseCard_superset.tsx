@@ -18,7 +18,7 @@ interface ISuperEC_superset {
 }
 
 const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
-    const { workout, setWorkout } = useWorkout(); // 
+    const { workoutState, setWorkoutState } = useWorkout(); // 
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -28,12 +28,12 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
     // Handler for when an input in the child changes
     const inputchangeHandler = (index: number, field: string, newValue: any) => {
         // Safely check if 'sets' array exists
-        if (!workout.items[0].sets) {
+        if (!workoutState.workout.items[0].sets) {
             console.error("Sets array is not initialized");
             return;
         }
 
-        const updatedSets = [...workout.items[0].sets]; // Make a shallow copy of the sets
+        const updatedSets = [...workoutState.workout.items[0].sets]; // Make a shallow copy of the sets
 
         if (updatedSets[index]) {
             // Check if the set at the specified index exists
@@ -47,11 +47,11 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
         }
 
         // Update the parent state
-        setWorkout({
-            ...workout,
+        setWorkoutState({
+            ...workoutState.workout,
             items: [
                 {
-                    ...workout.items[0],
+                    ...workoutState.workout.items[0],
                     sets: updatedSets,
                 },
             ],
@@ -60,13 +60,13 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
 
     const addNormalSet = () => {
         // Ensure sets array is initialized properly
-        if (!workout.items[2].exercises) {
+        if (!workoutState.workout.items[2].exercises) {
             console.error("Sets array is not initialized");
             return;
         }
 
         const newSet: WorkoutSet = {
-            index: workout.items[2].sets + 1,
+            index: workoutState.workout.items[2].sets + 1,
             setType: "Normal", // Default set type
             reps: 0,           // Default value
             weight: 0,         // Default value
@@ -74,9 +74,9 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
         };
 
         // Update the state to add the new set to the item with the name "Bench Press"
-        setWorkout({
-            ...workout,
-            items: workout.items.map((item: any) =>
+        setWorkoutState({
+            ...workoutState.workout,
+            items: workoutState.workout.items.map((item: any) =>
                 item.name === "Bench Press"
                     ? { ...item, sets: [...item.sets, newSet] } // Add the new set to the "Bench Press" item
                     : item // Keep the rest of the items unchanged
@@ -88,7 +88,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
         console.log(shortText);
 
         // Ensure sets array is initialized properly
-        if (!workout.items[0].sets) {
+        if (!workoutState.workout.items[0].sets) {
             console.error("Sets array is not initialized");
             return;
         }
@@ -100,7 +100,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
             case "Drop":
             case "Myorep":
                 newSet = {
-                    index: workout.items[0].sets + 1,
+                    index: workoutState.workout.items[0].sets + 1,
                     setType: shortText,   // Set the type directly
                     drops: [{
                         reps: 0,              // Default reps
@@ -112,7 +112,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
 
             case "Warmup":
                 newSet = {
-                    index: workout.items[0].sets + 1,
+                    index: workoutState.workout.items[0].sets + 1,
                     setType: shortText,   // Set the type directly
                     reps: 0,              // Default reps
                     weight: 0,            // Default weight
@@ -127,9 +127,9 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
 
         // If a valid newSet was created, update the state
         if (newSet) {
-            setWorkout({
-                ...workout,
-                items: workout.items.map((item: any) =>
+            setWorkoutState({
+                ...workoutState.workout,
+                items: workoutState.workout.items.map((item: any) =>
                     item.name === "Bench Press"  // Specify which item to update
                         ? { ...item, sets: [...item.sets, newSet] }  // Add the new set to the "Bench Press" item
                         : item // Keep the rest of the items unchanged
@@ -147,12 +147,12 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
 
     useEffect(() => {
         // sanitation of data
-        console.log(workout.items[2]);
+        console.log(workoutState.workout.items[2]);
     }, []);
     return (
         <Card className="p-1 md:p-6">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2">
-                <CardTitle className="text-sm md:text-base font-medium">{workout.items[2].name}</CardTitle>
+                <CardTitle className="text-sm md:text-base font-medium">{workoutState.workout.items[2].name}</CardTitle>
                 <Button variant="ghost" size="icon">
                     <X className="h-4 w-4" />
                 </Button>
@@ -170,56 +170,56 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
                     </TableHeader>
                     <TableBody className="text-xs">
                         {/* Loop through sets in the first exercise */}
-                        {workout.items[2].exercises[0].sets.map((set: WorkoutSet, index: number) => (
+                        {workoutState.workout.items[2].exercises[0].sets.map((set: WorkoutSet, index: number) => (
                             <>
                                 {/* Render the first exercise's set */}
                                 <TableRow key={`exercise-0-set-${index}`}>
                                     <TableCell
                                         className="relative cursor-pointer text-xs md:text-sm"
-                                        rowSpan={workout.items[2].exercises.length}
+                                        rowSpan={workoutState.workout.items[2].exercises.length}
                                     >
                                         <span className="mr-2">{index + 1}</span>
                                     </TableCell>
-                                    <TableCell>{workout.items[2].exercises[0].name}</TableCell>
+                                    <TableCell>{workoutState.workout.items[2].exercises[0].name}</TableCell>
                                     <TableCell>
                                         <Input
                                             type="number"
-                                            value={workout.items[2].exercises[0].sets[index]?.weight || ''}
+                                            value={workoutState.workout.items[2].exercises[0].sets[index]?.weight || ''}
 
                                         />
                                     </TableCell>
                                     <TableCell>
                                         <Input
                                             type="number"
-                                            value={workout.items[2].exercises[0].sets[index]?.reps || ''}
+                                            value={workoutState.workout.items[2].exercises[0].sets[index]?.reps || ''}
 
                                         />
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        {workout.items[2].exercises[0].sets[index]?.reps * workout.items[2].exercises[0].sets[index]?.weight}
+                                        {workoutState.workout.items[2].exercises[0].sets[index]?.reps * workoutState.workout.items[2].exercises[0].sets[index]?.weight}
                                     </TableCell>
                                 </TableRow>
 
                                 {/* Render the second exercise's set for the same index */}
-                                {workout.items[2].exercises[1]?.sets[index] && (
+                                {workoutState.workout.items[2].exercises[1]?.sets[index] && (
                                     <TableRow key={`exercise-1-set-${index}`}>
-                                        <TableCell>{workout.items[2].exercises[1].name}</TableCell>
+                                        <TableCell>{workoutState.workout.items[2].exercises[1].name}</TableCell>
                                         <TableCell>
                                             <Input
                                                 type="number"
-                                                value={workout.items[2].exercises[1].sets[index]?.weight || ''}
+                                                value={workoutState.workout.items[2].exercises[1].sets[index]?.weight || ''}
 
                                             />
                                         </TableCell>
                                         <TableCell>
                                             <Input
                                                 type="number"
-                                                value={workout.items[2].exercises[1].sets[index]?.reps || ''}
+                                                value={workoutState.workout.items[2].exercises[1].sets[index]?.reps || ''}
 
                                             />
                                         </TableCell>
                                         <TableCell className="text-right">
-                                            {workout.items[2].exercises[1].sets[index]?.reps * workout.items[2].exercises[1].sets[index]?.weight}
+                                            {workoutState.workout.items[2].exercises[1].sets[index]?.reps * workoutState.workout.items[2].exercises[1].sets[index]?.weight}
                                         </TableCell>
                                     </TableRow>
                                 )}

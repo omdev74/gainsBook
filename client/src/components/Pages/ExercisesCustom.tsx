@@ -51,7 +51,7 @@ export default function ExercisesCustom() {
 
     return (
         <div className="flex flex-col h-screen">
-            <div className="container mx-auto mb-0 px-4 py-8 pb-0 flex-shrink-0">
+            <div className="container mx-auto mb-0 p-2 flex-shrink-0 border-b" >
                 <h1 className="text-3xl font-bold mb-8">Exercise Library</h1>
 
                 <div className="flex flex-col gap-4">

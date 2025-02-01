@@ -8,7 +8,7 @@ export function Navbar() {
     return (
         <>
             {/* for screens bigger than sm */}
-            <nav className="bg-background border-b sm:block hidden">
+            <nav className="bg-background border-b sm:block hidden fixed top-0 left-0 right-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex">
@@ -21,8 +21,8 @@ export function Navbar() {
                             <NavItem to="/" icon={<Home className="h-5 w-5" />}>
                                 Home
                             </NavItem>
-                            <NavItem to="/exercises" icon={<Dumbbell className="h-5 w-5" />}>
-                                Exercises
+                            <NavItem to="/workout" icon={<Dumbbell className="h-5 w-5" />}>
+                            workout
                             </NavItem>
                             <NavItem to="/history" icon={<Calendar className="h-5 w-5" />}>
                                 History
@@ -48,12 +48,12 @@ export function Navbar() {
             </nav>
 
             {/* Mobile Navbar (Bottom) */}
-            <nav className="bg-background fixed bottom-0 left-0 right-0 sm:hidden flex justify-around items-center border-t z-10 p-2.5">
+            <nav className="bg-background fixed bottom-0 left-0 right-0 sm:hidden flex justify-around items-center z-50 p-2.5 ">
                 <NavItem to="/" icon={<Home className="h-6 w-6" />}>
                     Home
                 </NavItem>
-                <NavItem to="/exercises" icon={<Dumbbell className="h-6 w-6" />}>
-                    Exercises
+                <NavItem to="/workout" icon={<Dumbbell className="h-6 w-6" />}>
+                    Workout
                 </NavItem>
                 <NavItem to="/history" icon={<Calendar className="h-6 w-6" />}>
                     History

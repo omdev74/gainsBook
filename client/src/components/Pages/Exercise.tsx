@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react'
 import { format, subDays } from 'date-fns'
 import { PlayCircle, ClipboardList, BarChart, Trophy, Settings, ArrowLeft } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { LineChart, Line, BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList } from 'recharts';
+import { LineChart, Line, BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList, AreaChart, Area } from 'recharts';
 import {
   ChartConfig,
   ChartContainer,
@@ -17,6 +17,7 @@ import { NavLink, useParams } from 'react-router'
 import { Button } from '../ui/button'
 import { useExercises } from '@/hooks/useExercises'
 import Loader from '../ui/loader'
+import { Badge } from '../ui/badge'
 
 // Helper functions to generate random data
 const generateRandomWorkouts = (count: number) => {
@@ -26,6 +27,8 @@ const generateRandomWorkouts = (count: number) => {
       weight: Math.floor(Math.random() * 50) + 150,
       reps: Math.floor(Math.random() * 5) + 5,
     })),
+    title: "WoroutName",
+    notes: "Upper body workout focusing on chest and triceps."
   }))
 }
 
@@ -54,7 +57,7 @@ const chartConfig = {
   },
   mobile: {
     label: "Mobile",
-    color: "hsl(var(--chart-2))",
+    color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
@@ -120,7 +123,7 @@ export default function Exercise() {
         </NavLink>
       </nav>
 
-      <Tabs defaultValue="about" >
+      <Tabs defaultValue="history" >
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="about">
             <PlayCircle className="w-4 h-4 mr-2" />
@@ -160,9 +163,12 @@ export default function Exercise() {
         <TabsContent value="history">
           <div className="space-y-6">
             {workouts.map((workout, index) => (
-              <Card key={index}>
+              <Card key={index} className='p-0 w-full  mx-auto hover:shadow-lg transition-shadow duration-300'>
                 <CardHeader>
-                  <CardTitle>{workout.date}</CardTitle>
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="text-lg sm:text-xl font-bold">{workout.title || "TITLE"}</CardTitle>
+                    <Badge variant={"secondary"}>{` ${format(new Date(workout.date), "PPP")}`}</Badge>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <Table>
@@ -170,7 +176,7 @@ export default function Exercise() {
                       <TableRow>
                         <TableHead>Set</TableHead>
                         <TableHead>Weight</TableHead>
-                        <TableHead>Reps</TableHead>
+                        <TableHead className='text-right'>Reps</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -178,12 +184,15 @@ export default function Exercise() {
                         <TableRow key={setIndex}>
                           <TableCell>{setIndex + 1}</TableCell>
                           <TableCell>{set.weight} lbs</TableCell>
-                          <TableCell>{set.reps}</TableCell>
+                          <TableCell className='text-right'>{set.reps}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </CardContent>
+                <CardFooter>
+                  <p className="text-xs sm:text-sm text-muted-foreground italic">{workout.notes}</p>
+                </CardFooter>
               </Card>
             ))}
           </div>
@@ -191,6 +200,84 @@ export default function Exercise() {
 
         <TabsContent value="charts">
           <div className="space-y-8">
+            <div className="">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Weekly Progress area</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <ChartContainer
+                    config={chartConfig}
+                  >
+                    <AreaChart
+                      accessibilityLayer
+                      data={chartData}
+                      margin={{
+                        top: 20,
+                        left: 20,
+                        right: 20,
+                        bottom: 0,
+                      }}
+                    >
+                      <XAxis dataKey="date"
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                      />
+                      <YAxis domain={['dataMin-20', 'dataMax+20']} hide />
+                      <defs>
+                        <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
+                          <stop
+                            offset="5%"
+                            stopColor="var(--color-mobile)"
+                            stopOpacity={0.8}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="var(--color-mobile)"
+                            stopOpacity={0.1}
+                          />
+                        </linearGradient>
+                      </defs>
+                      <Area
+                        dataKey="oneRM"
+                        type="natural"
+                        fill="url(#fillTime)"
+                        fillOpacity={0.4}
+                        stroke="var(--color-mobile)"
+                        dot={{
+                          fill: "hsl(var(--primary))",
+                        }}
+                        activeDot={{
+                          r: 6,
+                        }} >
+                        <LabelList
+                          position="top"
+                          offset={12}
+                          className="fill-foreground"
+                          fontSize={12}
+                        />
+                      </Area>
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent hideLabel />}
+                        formatter={(value) => (
+                          <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
+                            Time in bed
+                            <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                              {value}
+                              <span className="font-normal text-muted-foreground">
+                                hr
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      />
+                    </AreaChart>
+                  </ChartContainer>
+                </CardContent>
+              </Card>
+            </div>
             <div className="">
               <Card>
                 <CardHeader>

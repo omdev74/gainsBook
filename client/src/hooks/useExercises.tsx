@@ -38,6 +38,8 @@ export function useExercises() {
       setError(null);
 
       try {
+
+        console.log("firring the exercises fethch api instide the useExercise hook");
         const response = await axios.get(`${backendURI}/exercises`, {
           headers: {
             "Content-Type": "application/json",

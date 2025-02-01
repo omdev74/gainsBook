@@ -17,7 +17,7 @@ interface IEC_normalProps {
 
 
 const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
-    const { workout, setWorkout } = useWorkout(); // 
+    const { workoutState, setWorkoutState} = useWorkout(); // 
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -27,12 +27,12 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
     // Handler for when an input in the child changes
     const inputchangeHandler = (index: number, field: string, newValue: any) => {
         // Safely check if 'sets' array exists
-        if (!workout.items[0].sets) {
+        if (!workoutState.workout.items[0].sets) {
             console.error("Sets array is not initialized");
             return;
         }
 
-        const updatedSets = [...workout.items[0].sets]; // Make a shallow copy of the sets
+        const updatedSets = [...workoutState.workout.items[0].sets]; // Make a shallow copy of the sets
 
         if (updatedSets[index]) {
             // Check if the set at the specified index exists
@@ -46,11 +46,11 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         }
 
         // Update the parent state
-        setWorkout({
-            ...workout,
+         setWorkoutState({
+            ...workoutState.workout,
             items: [
                 {
-                    ...workout.items[0],
+                    ...workoutState.workout.items[0],
                     sets: updatedSets,
                 },
             ],
@@ -59,13 +59,13 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
 
     const addNormalSet = () => {
         // Ensure sets array is initialized properly
-        if (!workout.items[0].sets) {
+        if (!workoutState.workout.items[0].sets) {
             console.error("Sets array is not initialized");
             return;
         }
 
         const newSet: WorkoutSet = {
-            index: workout.items[0].sets.lenght() + 1,
+            index: workoutState.workout.items[0].sets.lenght() + 1,
             setType: "Normal", // Default set type
             reps: 0,           // Default value
             weight: 0,         // Default value
@@ -73,9 +73,9 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         };
 
         // Update the state to add the new set to the item with the name "Bench Press"
-        setWorkout({
-            ...workout,
-            items: workout.items.map((item: any) =>
+         setWorkoutState({
+            ...workoutState.workout,
+            items: workoutState.workout.items.map((item: any) =>
                 item.name === "Bench Press"
                     ? { ...item, sets: [...item.sets, newSet] } // Add the new set to the "Bench Press" item
                     : item // Keep the rest of the items unchanged
@@ -87,7 +87,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         console.log(shortText);
 
         // Ensure sets array is initialized properly
-        if (!workout.items[0].sets) {
+        if (!workoutState.workout.items[0].sets) {
             console.error("Sets array is not initialized");
             return;
         }
@@ -99,7 +99,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
             case "Drop":
             case "Myorep":
                 newSet = {
-                    index: workout.items[0].sets + 1,
+                    index: workoutState.workout.items[0].sets + 1,
                     setType: shortText,   // Set the type directly
                     drops: [{
                         reps: 0,              // Default reps
@@ -111,7 +111,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
 
             case "Warmup":
                 newSet = {
-                    index: workout.items[0].sets + 1,
+                    index: workoutState.workout.items[0].sets + 1,
                     setType: shortText,   // Set the type directly
                     reps: 0,              // Default reps
                     weight: 0,            // Default weight
@@ -126,9 +126,9 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
 
         // If a valid newSet was created, update the state
         if (newSet) {
-            setWorkout({
-                ...workout,
-                items: workout.items.map((item: any) =>
+             setWorkoutState({
+                ...workoutState.workout,
+                items: workoutState.workout.items.map((item: any) =>
                     item.name === "Bench Press"  // Specify which item to update
                         ? { ...item, sets: [...item.sets, newSet] }  // Add the new set to the "Bench Press" item
                         : item // Keep the rest of the items unchanged
@@ -146,7 +146,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
     return (
         <Card className="p-1 md:p-6">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2">
-                <CardTitle className="text-sm md:text-base font-medium">{workout.items[0].name}</CardTitle>
+                <CardTitle className="text-sm md:text-base font-medium">{workoutState.workout.items[0].name}</CardTitle>
                 <Button variant="ghost" size="icon">
                     <X className="h-4 w-4" />
                 </Button>
@@ -163,7 +163,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody className="text-xs">
-                        {workout.items[0].sets.map((set: WorkoutSet, index: number) => (
+                        {workoutState.workout.items[0].sets.map((set: WorkoutSet, index: number) => (
                             <Set set={set} index={index} inputchangeHandler={inputchangeHandler} key={index} />
                         ))}
                     </TableBody>

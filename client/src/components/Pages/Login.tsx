@@ -42,7 +42,7 @@ const Login01Page = () => {
     useEffect(()=>{
 
         if(isLoggedIn){
-            navigate("/profile");
+            navigate("/");
         }
 
     },[])
@@ -65,7 +65,7 @@ const Login01Page = () => {
                 login(result.token, result.user);
 
                 // Redirect to the profile page
-                navigate("/profile");
+                navigate("/");
             } else {
                 const errorText = await response.text();
                 console.error("Login failed:", errorText);

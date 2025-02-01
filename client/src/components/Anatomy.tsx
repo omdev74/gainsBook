@@ -41,9 +41,7 @@ const Anatomy = () => {
 
                 onClick={handleMuscleClick}
                 muscleGroupData={muscleGroupData}
-            >
-                <g id="back" fill="red"></g>
-            </Svg>
+            />
 
             <h3 className="text-primary">{selectedGroup}</h3>
 

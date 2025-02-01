@@ -5,7 +5,7 @@ import { AccordionTrigger, Accordion, AccordionContent, AccordionItem } from '@/
 interface IWorkoutStateProps { }
 
 const WorkoutState: React.FunctionComponent<IWorkoutStateProps> = (props) => {
-    const { workout, setWorkout } = useWorkout();
+    const { workoutState, setWorkoutState } = useWorkout();
 
     return (
 
@@ -15,7 +15,7 @@ const WorkoutState: React.FunctionComponent<IWorkoutStateProps> = (props) => {
                 <AccordionContent>
 
 
-                    <pre>{JSON.stringify(workout, null, 2)}</pre>
+                    <pre>{JSON.stringify(workoutState.workout, null, 2)}</pre>
 
                 </AccordionContent>
             </AccordionItem>
