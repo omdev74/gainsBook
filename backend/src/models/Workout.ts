@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from 'mongoose';
 
 export const WorkoutSchema = new Schema(
   {
-    Title: { type: String, required: true },
+    Title: { type: String, default: `${Date.now()} workout` },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     date: { type: Date, required: true },
     notes: { type: String },

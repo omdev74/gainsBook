@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import Loader from "../ui/loader"
 import { NavLink } from "react-router"
 
+
 export default function ExercisesCustom() {
     const {
         exercises,

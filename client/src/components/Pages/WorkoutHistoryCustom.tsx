@@ -125,7 +125,7 @@ export default function WorkoutHistoryCustom() {
                 <Card key={workout._id} className="w-full  mx-auto hover:shadow-lg transition-shadow duration-300" ref={(el) => (cardRefs.current[dateKey] = el)}>
                   <CardHeader>
                     <div className="flex justify-between items-center">
-                      <CardTitle className="text-lg sm:text-xl font-bold">{workout.title || "TITLE"}</CardTitle>
+                      <CardTitle className="text-lg sm:text-xl font-bold">{workout.Title || "TITLE"}</CardTitle>
                       <Badge variant={"secondary"}>{` ${format(new Date(workout.date), "PPP")}`}</Badge>
                     </div>
                     <CardDescription className="mt-2">

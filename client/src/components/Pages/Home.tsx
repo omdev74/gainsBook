@@ -89,6 +89,9 @@ export default function Home() {
                         <Anatomy />
 
                     </Card>
+
+                </div>
+                <div className="grid gap-8  w-full">
                     <Card>
                         <CardHeader>
                             <CardTitle>Recent Workouts</CardTitle>

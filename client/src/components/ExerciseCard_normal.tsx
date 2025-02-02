@@ -55,6 +55,10 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                 },
             ],
         });
+
+
+
+        console.log(`got an input change ${index} ${field} ${newValue}`);
     };
 
     const addNormalSet = () => {

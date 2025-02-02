@@ -30,7 +30,7 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                         },
                         {
                             reps: 10,
-                            weight: 55,
+                            weight: 550,
                             setType: "Normal",
                         },
                         {

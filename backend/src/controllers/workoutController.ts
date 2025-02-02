@@ -7,8 +7,8 @@ import { Request, Response, NextFunction } from 'express';
 const createSampleWorkout = async (req: Request, res: Response): Promise<any> => {
     try {
         // Fetch exercise references dynamically
-        const defaultExercise1 = await DefaultExerciseModel.findOne({ name: "Push-Up" });
-        const defaultExercise2 = await DefaultExerciseModel.findOne({ name: "Squat" });
+        const defaultExercise1 = await DefaultExerciseModel.findOne({ name: "Arnold Shoulder Press" });
+        const defaultExercise2 = await DefaultExerciseModel.findOne({ name: "Barbell Hack Squats" });
 
         if (!defaultExercise1 || !defaultExercise2) {
             return res.status(404).json({ message: "Default exercises not found." });
@@ -96,8 +96,9 @@ const createSampleWorkout = async (req: Request, res: Response): Promise<any> =>
         });
     } catch (error) {
         console.error("Error creating workout:", error);
-        res.status(500).json({ message: "Error creating workout" });
+        res.status(500).json({ message: "Error creating workout", error });
     }
+
 };
 
 

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { WorkoutSet, NormalSet, WarmupSet, DropSet, MyorepSet } from '@shared/types/workout';
 import { Checkbox } from '../ui/checkbox';
 import { Badge } from '../ui/badge';
+import { InputCustom } from '../ui/InputCustom';
 
 interface ISetProps {
   set: WorkoutSet;
@@ -20,7 +21,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
         <TableRow key={dropIndex + 1} >
           <TableCell>{`Drop #${dropIndex + 2}`}</TableCell>
           <TableCell>
-            <Input
+            <InputCustom
               type="number"
               value={drop.weight}
               onChange={(e) =>
@@ -34,7 +35,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
             />
           </TableCell>
           <TableCell>
-            <Input
+            <InputCustom
               type="number"
               value={drop.reps}
               onChange={(e) =>
@@ -79,7 +80,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
 
             <TableCell>{setType === "Normal" ? "It's a Normal" : "It's a Warmup"}</TableCell>
             <TableCell>
-              <Input
+              <InputCustom
                 type="number"
                 value={(set as NormalSet | WarmupSet).weight}
                 onChange={(e) => inputchangeHandler(index, "weight", e.target.value)}
@@ -87,7 +88,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
               />
             </TableCell>
             <TableCell>
-              <Input
+              <InputCustom
                 type="number"
                 value={(set as NormalSet | WarmupSet).reps}
                 onChange={(e) => inputchangeHandler(index, "reps", e.target.value)}
@@ -126,7 +127,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
               {/* First sub-row */}
               <TableCell >Drop #1</TableCell>
               <TableCell>
-                <Input
+                <InputCustom
                   type="number"
                   value={drops[0].weight}
                   onChange={(e) =>
@@ -140,7 +141,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
                 />
               </TableCell>
               <TableCell>
-                <Input
+                <InputCustom
                   type="number"
                   value={drops[0].reps}
                   onChange={(e) =>

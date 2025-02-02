@@ -11,6 +11,7 @@ import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerC
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Checkbox } from './ui/checkbox';
+import { InputCustom } from './ui/InputCustom';
 
 
 
@@ -182,14 +183,14 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
                                     </TableCell>
                                     <TableCell>{workoutState.workout.items[2].exercises[0].name}</TableCell>
                                     <TableCell>
-                                        <Input
+                                        <InputCustom
                                             type="number"
                                             value={workoutState.workout.items[2].exercises[0].sets[index]?.weight || ''}
 
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        <Input
+                                        <InputCustom
                                             type="number"
                                             value={workoutState.workout.items[2].exercises[0].sets[index]?.reps || ''}
 
@@ -205,14 +206,14 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
                                     <TableRow key={`exercise-1-set-${index}`}>
                                         <TableCell>{workoutState.workout.items[2].exercises[1].name}</TableCell>
                                         <TableCell>
-                                            <Input
+                                            <InputCustom
                                                 type="number"
                                                 value={workoutState.workout.items[2].exercises[1].sets[index]?.weight || ''}
 
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <Input
+                                            <InputCustom
                                                 type="number"
                                                 value={workoutState.workout.items[2].exercises[1].sets[index]?.reps || ''}
 
