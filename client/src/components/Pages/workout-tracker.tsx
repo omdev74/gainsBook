@@ -27,20 +27,21 @@ export default function WorkoutTrackershadcn() {
 
 
     <div
-      className={`fixed left-0 right-0 bg-background shadow-lg transition-all duration-300 ease-in-out z-20 ${isExpanded
-        ? "sm:bottom-0 sm:h-[calc(100%)] bottom-16 h-[calc(100%-4rem)]" // Expanded state
+      className={`fixed left-0 right-0 bg-background shadow-lg transition-all duration-500 ease-in-out z-20 ${isExpanded
+        ? "sm:bottom-0 sm:h-[calc(100%-4rem)] bottom-16 h-[calc(100%-4rem)] " // Expanded state
         : "sm:bottom-0 bottom-16 " // Collapsed state
         }`}
       aria-expanded={isExpanded}
       role="region"
     >
-      <div className="flex items-center justify-between p-3 sm:p-6 border-t">
+      <div className="flex items-center justify-between p-3 sm:p-6  border-t">
         <div className="flex flex-col items-center">
           <h2 className="text-sm font-medium text-muted-foreground mb-1">Morning Cardio</h2>
           <div className="flex items-center space-x-2">
             <span className="text-xl font-bold text-foreground">00:45:30</span>
           </div>
         </div>
+
         <div className="flex justify-between gap-2">
           <Button
             variant="secondary"
@@ -79,6 +80,7 @@ export default function WorkoutTrackershadcn() {
           <EC_normal />
           <EC_superset />
         </div>
+        <div className="flex justify-between flex-col w-full gap-2">
         <Button
           variant="destructive"
           className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
@@ -95,6 +97,7 @@ export default function WorkoutTrackershadcn() {
           <Check className="h-4 w-4" />
           <span>Complete workout</span>
         </Button>
+        </div>
         <WorkoutState />
       </div>
     </div>

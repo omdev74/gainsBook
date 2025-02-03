@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, EllipsisVertical, Plus, X } from 'lucide-react'
 import { useWorkout } from '@/contexts/WorkoutContext';
 import { Exercise, WorkoutSet } from '@shared/types/workout';
 import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerClose, DrawerTrigger } from "@/components/ui/drawer";
@@ -20,7 +20,7 @@ interface ISuperEC_superset {
 
 const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
     const { workoutState, setWorkoutState } = useWorkout(); // 
-
+    const [isExpanded, setIsExpanded] = React.useState(false)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const toggleDrawer = () => {
@@ -71,7 +71,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
             setType: "Normal", // Default set type
             reps: 0,           // Default value
             weight: 0,         // Default value
-           
+
         };
 
         // Update the state to add the new set to the item with the name "Bench Press"
@@ -107,7 +107,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
                         reps: 0,              // Default reps
                         weight: 0
                     }],            // Initialize with an empty drops array
-                    
+
                 };
                 break;
 
@@ -117,7 +117,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
                     setType: shortText,   // Set the type directly
                     reps: 0,              // Default reps
                     weight: 0,            // Default weight
-                    
+
                 };
                 break;
 
@@ -154,9 +154,22 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
         <Card className="p-1 md:p-6">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2">
                 <CardTitle className="text-sm md:text-base font-medium">{workoutState.workout.items[2].name}</CardTitle>
-                <Button variant="ghost" size="icon">
-                    <X className="h-4 w-4" />
-                </Button>
+                <div>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        aria-label={isExpanded ? "Collapse drawer" : "Expand drawer"}
+                    >
+                        {isExpanded ? <ChevronDown className="h-6 w-6" /> : <ChevronUp className="h-6 w-6" />}
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                        <X className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                        <EllipsisVertical className="h-4 w-4" />
+                    </Button>
+                </div>
             </CardHeader>
             <CardContent className="sm: p-1">
                 <Table className="w-full table-auto border-collapse">
@@ -176,7 +189,7 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
                                 {/* Render the first exercise's set */}
                                 <TableRow key={`exercise-0-set-${index}`}>
                                     <TableCell
-                                        className="relative cursor-pointer text-xs md:text-sm"
+                                        className="relative cursor-pointer text-2xl md:text-xl font-bold"
                                         rowSpan={workoutState.workout.items[2].exercises.length}
                                     >
                                         <span className="mr-2">{index + 1}</span>
@@ -262,8 +275,8 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
                 </Drawer>
             </CardContent>
             <CardFooter className='p-3 md:p-4 flex-col gap-6 text-xs md:text-sm' >
-                <div className="w-full flex justify-evenly ">
-                    <Button variant="default" className="text-xs md:text-sm" onClick={addNormalSet}>
+                <div className="w-full flex flex-col justify-evenly ">
+                    <Button variant="secondary" className="text-xs md:text-sm" onClick={addNormalSet}>
                         <Plus className="h-4 w-4 mr-2" /> Add Set
                     </Button>
 

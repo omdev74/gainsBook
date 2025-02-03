@@ -69,7 +69,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
       case "Warmup":
         return (
           <TableRow>
-            <TableCell className="relative cursor-pointer text-xs md:text-sm" rowSpan={1} >
+            <TableCell className="relative cursor-pointer text-2xl md:text-xl font-bold" rowSpan={1} >
               <span className="mr-2">{index + 1}</span>
               {setType !== "Normal" && (
                 <Badge className={`absolute top-0 left-0 ${options.Warmup.color} w-fit`} variant={"custom"}>
@@ -109,7 +109,7 @@ const Set: React.FunctionComponent<ISetProps> = ({ set, index, inputchangeHandle
             <TableRow>
               {/* First spanning cell */}
 
-              <TableCell className="relative cursor-pointer text-xs md:text-sm" rowSpan={drops.length}>
+              <TableCell className="relative cursor-pointer text-2xl md:text-xl font-bold" rowSpan={drops.length}>
                 <span className="mr-2">{index + 1}</span>
                 {setType === "Drop" && (
                   <Badge className={`absolute top-0 left-0 ${options.Drop.color} w-fit`} variant={"custom"}>

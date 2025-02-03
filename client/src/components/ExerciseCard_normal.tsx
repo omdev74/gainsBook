@@ -3,7 +3,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, EllipsisVertical, Plus, X } from 'lucide-react'
 import { useWorkout } from '@/contexts/WorkoutContext';
 import { WorkoutSet } from '@shared/types/workout';
 import Set from './Sets/Set';
@@ -17,8 +17,9 @@ interface IEC_normalProps {
 
 
 const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
-    const { workoutState, setWorkoutState} = useWorkout(); // 
+    const { workoutState, setWorkoutState } = useWorkout(); // 
 
+    const [isExpanded, setIsExpanded] = React.useState(false)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const toggleDrawer = () => {
@@ -46,7 +47,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         }
 
         // Update the parent state
-         setWorkoutState({
+        setWorkoutState({
             ...workoutState.workout,
             items: [
                 {
@@ -77,7 +78,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         };
 
         // Update the state to add the new set to the item with the name "Bench Press"
-         setWorkoutState({
+        setWorkoutState({
             ...workoutState.workout,
             items: workoutState.workout.items.map((item: any) =>
                 item.name === "Bench Press"
@@ -130,7 +131,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
 
         // If a valid newSet was created, update the state
         if (newSet) {
-             setWorkoutState({
+            setWorkoutState({
                 ...workoutState.workout,
                 items: workoutState.workout.items.map((item: any) =>
                     item.name === "Bench Press"  // Specify which item to update
@@ -151,9 +152,23 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         <Card className="p-1 md:p-6">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2">
                 <CardTitle className="text-sm md:text-base font-medium">{workoutState.workout.items[0].name}</CardTitle>
+                <div>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    aria-label={isExpanded ? "Collapse drawer" : "Expand drawer"}
+                >
+                    {isExpanded ? <ChevronDown className="h-6 w-6" /> : <ChevronUp className="h-6 w-6" />}
+                </Button>
                 <Button variant="ghost" size="icon">
                     <X className="h-4 w-4" />
                 </Button>
+                <Button variant="ghost" size="icon">
+                    <EllipsisVertical className="h-4 w-4" />
+                </Button>
+                </div>
+
             </CardHeader>
             <CardContent className="sm: p-1">
                 <Table className="w-full table-auto border-collapse">
@@ -204,12 +219,12 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                 </Drawer>
             </CardContent>
             <CardFooter className='p-3 md:p-4 flex-col gap-6 text-xs md:text-sm' >
-                <div className="w-full flex justify-evenly ">
-                    <Button variant="default" className="text-xs md:text-sm" onClick={addNormalSet}>
+                <div className="w-full flex flex-col justify-between gap-2">
+                    <Button variant="secondary" className="text-xs md:text-sm " onClick={addNormalSet}>
                         <Plus className="h-4 w-4 mr-2" /> Add Normal Set
                     </Button>
 
-                    <Button variant="default" className="text-xs md:text-sm" onClick={toggleDrawer}>
+                    <Button variant="secondary" className="text-xs md:text-sm " onClick={toggleDrawer}>
                         <Plus className="h-4 w-4 mr-2" /> Add Special Set
                     </Button>
                 </div>
