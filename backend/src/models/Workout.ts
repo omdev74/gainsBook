@@ -1,4 +1,6 @@
 import mongoose, { Schema, model } from 'mongoose';
+import { ItemDataSchema } from './ItemData';
+
 
 export const WorkoutSchema = new Schema(
   {
@@ -13,10 +15,7 @@ export const WorkoutSchema = new Schema(
           required: true,
           enum: ['Regular', 'Superset'],
         },
-        itemData: {
-          type: Schema.Types.Mixed, // Additional data, such as Regularsets or superset details
-          required: false,
-        },
+        itemData: ItemDataSchema,
         ExerciseNote: { type: Schema.Types.ObjectId, ref: "ExerciseNote", required: false, default: null, },
 
 

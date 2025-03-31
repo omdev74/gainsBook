@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import { Workout } from '@shared/types/frontend';
 
 interface WorkoutContextType {
     workoutState: WorkoutState;
@@ -7,7 +8,7 @@ interface WorkoutContextType {
 
 interface WorkoutState {
     ongoing: boolean;
-    workout: any;
+    workout: Workout;
 }
 
 const WorkoutContext = createContext<WorkoutContextType | undefined>(undefined);
@@ -16,88 +17,85 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const [workoutState, setWorkoutState] = useState<WorkoutState>({
         ongoing: false,
         workout: {
-            id: 'workout_1',
-            name: 'Full Body Workout',
-            items: [
+            "_id": "679eb0d87cfd587968f90153",
+            "Title": "1738453011048 workout",
+            "userId": "678872f7dbef40683cdf6ad6",
+            "date": "2025-02-01T23:40:08.822Z",
+            "notes": "Upper body workout focusing on chest and triceps.",
+            "items": [
                 {
-                    id: "1",
-                    name: "Bench Press",
-                    sets: [
-                        {
-                            reps: 12,
-                            weight: 50,
-                            setType: "Normal",
-                        },
-                        {
-                            reps: 10,
-                            weight: 550,
-                            setType: "Normal",
-                        },
-                        {
-                            drops: [
-                                { reps: 8, weight: 60 },
-                                { reps: 8, weight: 60 },
-                            ],
-                            setType: "Drop",
-                        },
-                        {
-                            drops: [
-                                { reps: 4, weight: 70 },
-                                { reps: 4, weight: 70 },
-                            ],
-                            setType: "Myorep",
-                        },
-                    ],
+                    "itemType": "Regular",
+                    "itemData": {
+                        "exercisesAndTheirSets": [
+                            {
+                                "exerciseRef": {
+                                    "_id": "678ebf9115751d7decc978e1",
+                                    "name": "Arnold Shoulder Press"
+                                },
+                                "exerciseType": "DefaultExercise",
+                                "sets": [
+                                    {
+                                        "index": 1,
+                                        "setType": "Normal",
+                                        "reps": 12,
+                                        "weight": 0,
+                                        "volume": 0
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "ExerciseNote": null,
+                    "_id": "679eb0d87cfd587968f90154"
                 },
                 {
-                    id: "2",
-                    name: "Squat",
-                    sets: [
-                        {
-                            drops: [{ reps: 8, weight: 60 }],
-                            setType: "Drop",
-                        },
-                    ],
-                },
-                {
-                    id: "3",
-                    name: "Chest and Triceps Superset",
-                    exercises: [
-                        {
-                            id: "1",
-                            name: "Bench Press",
-                            sets: [
-                                {
-                                    reps: 13,
-                                    weight: 50,
-                                    setType: "Normal",
+                    "itemType": "Superset",
+                    "itemData": {
+                        "exercisesAndTheirSets": [
+                            {
+                                "exerciseRef": {
+                                    "_id": "678ebf9115751d7decc978e3",
+                                    "name": "Barbell Hack Squats"
                                 },
-                                {
-                                    reps: 10,
-                                    weight: 55,
-                                    setType: "Normal",
+                                "exerciseType": "DefaultExercise",
+                                "sets": [
+                                    {
+                                        "index": 1,
+                                        "setType": "Normal",
+                                        "reps": 10,
+                                        "weight": 50,
+                                        "volume": 500
+                                    }
+                                ]
+                            },
+                            {
+                                "exerciseRef": {
+                                    "_id": "678ebf9115751d7decc978e3",
+                                    "name": "Barbell Hack Squats"
                                 },
-                            ],
-                        },
-                        {
-                            id: "2",
-                            name: "Squat",
-                            sets: [
-                                {
-                                    reps: 12,
-                                    weight: 50,
-                                    setType: "Normal",
-                                },
-                                {
-                                    reps: 10,
-                                    weight: 55,
-                                    setType: "Normal",
-                                },
-                            ],
-                        },
-                    ],
-                },
+                                "exerciseType": "CustomExercise",
+                                "sets": [
+                                    {
+                                        "index": 1,
+                                        "setType": "Normal",
+                                        "reps": 10,
+                                        "weight": 50,
+                                        "volume": 500
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "ExerciseNote": null,
+                    "_id": "679eb0d87cfd587968f90155"
+                }
             ],
+            "TotalVolume": 500,
+            "TotalSets": 500,
+            "TotalExercises": 500,
+            "createdAt": "2025-02-01T23:40:08.827Z",
+            "updatedAt": "2025-02-01T23:40:08.827Z",
+            "__v": 0
         },
     });
 

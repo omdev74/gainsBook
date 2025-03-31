@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
-
+import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -13,17 +12,26 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer"
-
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { useExercises } from "@/hooks/useExercises"
-import { Dumbbell, Filter, Loader2 } from "lucide-react"
+import { Dumbbell, Filter, Plus } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import Loader from "../ui/loader"
-import { NavLink } from "react-router"
 
+interface Exercise {
+    id: string
+    name: string
+    muscle: string
+    equipment: { name: string }[]
+    sets: number
+}
 
-export default function ExercisesCustom() {
+interface ExercisesCustomProps {
+    onSelectExercises: (selectedExercises: Exercise[], asSuperset: boolean) => void
+}
+
+export default function ExercisesCustom({ onSelectExercises }: ExercisesCustomProps) {
     const {
         exercises,
         searchTerm,
@@ -38,10 +46,10 @@ export default function ExercisesCustom() {
         error,
         uniqueEquipment,
         uniqueMuscles,
-
     } = useExercises()
 
     const [activeFilter, setActiveFilter] = useState<"equipment" | "muscle">("equipment")
+    const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([])
 
     const toggleFilter = (filter: string, type: "equipment" | "muscle") => {
         const setFilter = type === "equipment" ? setEquipmentFilter : setMuscleFilter
@@ -49,11 +57,21 @@ export default function ExercisesCustom() {
         setFilter(currentFilter.includes(filter) ? currentFilter.filter((f) => f !== filter) : [...currentFilter, filter])
     }
 
+    const toggleExerciseSelection = (exercise: Exercise) => {
+        setSelectedExercises((prev) =>
+            prev.some((e) => e.id === exercise.id) ? prev.filter((e) => e.id !== exercise.id) : [...prev, exercise],
+        )
+    }
+
+    const handleSendSelectedExercises = (asSuperset: boolean) => {
+        onSelectExercises(selectedExercises, asSuperset)
+        setSelectedExercises([]) // Clear selection after sending
+    }
 
     return (
-        <div className="flex flex-col h-screen">
-            <div className="container mx-auto mb-0 p-2 flex-shrink-0 border-b" >
-                <h1 className="text-3xl font-bold mb-8">Exercise Library</h1>
+        <div className="flex flex-col h-screen bg-background">
+            <div className="container mx-auto mb-0 p-2 flex-shrink-0 border-b">
+                <h1 className="text-3xl font-bold mb-8">Add Exercises</h1>
 
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col sm:flex-row gap-2">
@@ -117,49 +135,95 @@ export default function ExercisesCustom() {
                             </Drawer>
                         </div>
                     </div>
-
                 </div>
             </div>
 
             <div className="flex-grow overflow-y-auto">
                 <ul className="container mx-auto px-4 py-4 space-y-4">
-
-
                     {loading ? (
                         <Loader />
                     ) : exercises && exercises.length > 0 ? (
-                        <>{exercises.map((exercise) => (
-                            <li
-                                key={exercise.id}
-                            >
-                                <NavLink to={`/exercise/${exercise.id}`} className="flex w-full space-x-4 p-2  rounded-lg shadow-sm items-center" > {/* Use w-full for full width */}
-                                    <Avatar className="">
+                        exercises.map((exercise) => {
+                            const isSelected = selectedExercises.some((e) => e.id === exercise.id);
+                            return (
+                                <li
+                                    key={exercise.id}
+                                    onClick={() => toggleExerciseSelection(exercise)}
+                                    className={`flex w-full space-x-4 p-2 rounded-lg shadow-sm items-center cursor-pointer 
+                        transition-all duration-200 ${isSelected ? "bg-primary/10 border border-primary shadow-md" : "hover:bg-secondary/50"
+                                        }`}
+                                >
+                                    <Avatar>
                                         <AvatarImage />
                                         <AvatarFallback>
-                                            {exercise.name.split(" ").slice(0, 2).map(word => word[0].toUpperCase()).join("")}
+                                            {exercise.name
+                                                .split(" ")
+                                                .slice(0, 2)
+                                                .map((word) => word[0].toUpperCase())
+                                                .join("")}
                                         </AvatarFallback>
                                     </Avatar>
-
                                     <div className="flex-grow">
                                         <h2 className="text-lg font-semibold">{exercise.name}</h2>
                                         <div className="flex flex-wrap gap-2 mt-1">
                                             <Badge variant="secondary">{exercise.muscle}</Badge>
-
-                                            {exercise.equipment.length > 0 ? (
-                                                <Badge variant="outline">{exercise.equipment[0].name}</Badge>
-                                            ) : null}
+                                            {exercise.equipment.length > 0 && <Badge variant="outline">{exercise.equipment[0].name}</Badge>}
                                         </div>
                                     </div>
                                     <div className="text-sm text-gray-500">{exercise.sets} sets</div>
-                                </NavLink>
-                            </li>
-                        ))
-                        }</>
+                                </li>
+                            );
+                        })
                     ) : exercises ? (
                         <p>{error}</p>
                     ) : null}
                 </ul>
+
             </div>
+
+            {selectedExercises.length > 0 && (
+                <div className="sticky bottom-32 right-4 flex justify-end p-4">
+                    {selectedExercises.length === 1 ? (
+                        <Button
+                            size="icon"
+                            className="h-14 w-14 rounded-full shadow-lg relative"
+                            onClick={() => handleSendSelectedExercises(false)} // Automatically add single exercise
+                        >
+                            <Plus className="h-6 w-6" />
+                            <span className="sr-only">Add Exercises</span>
+                            <span className="absolute -top-6 -right-2 bg-primary text-primary-foreground text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                                {selectedExercises.length}
+                            </span>
+                        </Button>
+                    ) : (
+                        <Drawer>
+                            <DrawerTrigger asChild>
+                                <Button size="icon" className="h-14 w-14 rounded-full shadow-lg relative">
+                                    <Plus className="h-6 w-6" />
+                                    <span className="sr-only">Add Exercises</span>
+                                    <span className="absolute -top-6 -right-2 bg-primary text-primary-foreground text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                                        {selectedExercises.length}
+                                    </span>
+                                </Button>
+                            </DrawerTrigger>
+                            <DrawerContent>
+                                <DrawerHeader>
+                                    <DrawerTitle>Add Exercises</DrawerTitle>
+                                    <DrawerDescription>Choose how to add the selected exercises</DrawerDescription>
+                                </DrawerHeader>
+                                <div className="p-4 space-y-4">
+                                    <Button onClick={() => handleSendSelectedExercises(false)} className="w-full">
+                                        Add as Individual Exercises
+                                    </Button>
+                                    <Button onClick={() => handleSendSelectedExercises(true)} className="w-full">
+                                        Add as Superset
+                                    </Button>
+                                </div>
+                            </DrawerContent>
+                        </Drawer>
+                    )}
+                </div>
+            )}
 
         </div>
     )

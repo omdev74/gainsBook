@@ -39,7 +39,7 @@ export default function SettingsPage() {
                 }
             );
 
-            console.log("Workout created successfully:", response.data);
+            
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 // Handle Axios-specific errors

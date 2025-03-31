@@ -153,19 +153,19 @@ export default function WorkoutHistoryCustom() {
                       item.itemType === "Regular" ? <div key={item._id} className="mb-3 " >
 
                         <h4 className="text-sm font-semibold flex justify-between">
-                          {/* <span>{item.itemData.exercisesAndThereSets[0].exerciseRef.name}</span> */}
-                          <span>{item.itemData.exercisesAndThereSets[0].sets.length} sets</span>
+                          {/* <span>{item.itemData.exercisesAndTheirSets[0].exerciseRef.name}</span> */}
+                          <span>{item.itemData.exercisesAndTheirSets[0].sets.length} sets</span>
                         </h4>
                         <p className="text-xs text-muted-foreground">
-                          {item.itemData.exercisesAndThereSets[0].sets.map((set:any, i:number) =>
-                            `${set.reps}x${set.weight}${i < item.itemData.exercisesAndThereSets[0].sets.length - 1 ? ', ' : ''}`
+                          {item.itemData.exercisesAndTheirSets[0].sets.map((set:any, i:number) =>
+                            `${set.reps}x${set.weight}${i < item.itemData.exercisesAndTheirSets[0].sets.length - 1 ? ', ' : ''}`
                           )}
                         </p>
                       </div> :
                         <div key={item._id} className="mb-4 text-red-500" >
 
 
-                          {item.itemData.exercisesAndThereSets.map((exercise:any, index:number) => (
+                          {item.itemData.exercisesAndTheirSets.map((exercise:any, index:number) => (
                             <h4 className="text-sm font-semibold flex justify-between">
                               <span>{exercise.exerciseRef?.name ?? "NA"}</span>
                               <span>{exercise.sets.length} sets</span>

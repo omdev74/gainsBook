@@ -25,12 +25,13 @@ const createSampleWorkout = async (req: Request, res: Response): Promise<any> =>
         const workout = new WorkoutModel({
             userId: user.id, // Reference to user
             date: new Date(),
-            notes: 'Upper body workout focusing on chest and triceps.',
+            notes: 'Sample workout',
+            Title: "Sample workout",
             items: [
                 {
                     itemType: 'Regular',
                     itemData: {
-                        exercisesAndThereSets: [
+                        exercisesAndTheirSets: [
                             {
                                 exerciseRef: defaultExercise1._id, // Push-Up exercise reference
                                 exerciseType: 'DefaultExercise',
@@ -50,7 +51,7 @@ const createSampleWorkout = async (req: Request, res: Response): Promise<any> =>
                 {
                     itemType: 'Superset',
                     itemData: {
-                        exercisesAndThereSets: [
+                        exercisesAndTheirSets: [
                             {
                                 exerciseRef: defaultExercise2._id, // Squat exercise reference
                                 exerciseType: 'DefaultExercise',
@@ -112,27 +113,11 @@ const getWorkoutsByUserId = async (req: Request, res: Response): Promise<any> =>
 
         // Fetch workouts for the user
         const workouts = await WorkoutModel.find({ userId: user.id }).populate({
-            path: 'items.itemData.exercisesAndThereSets.exerciseRef',
+            path: 'items.itemData.exercisesAndTheirSets.exerciseRef',
             select: 'name', // Specify fields to retrieve from the User model
         });
 
-        for (const workout of workouts) {
-            for (const item of workout.items) {
-                if (item.itemData && item.itemData.exercisesAndThereSets) {
-                    for (const exercise of item.itemData.exercisesAndThereSets) {
-                        if (exercise.exerciseRef) {
-                            if (exercise.exerciseType === "DefaultExercise") {
-                                exercise.exerciseRef = await DefaultExerciseModel.findById(exercise.exerciseRef).select('name');
-                            }
-                            else {
-                                exercise.exerciseRef = await CustomExerciseModel.findById(exercise.exerciseRef).select('name');
-                            }
-
-                        }
-                    }
-                }
-            }
-        }
+       
 
         if (!workouts || workouts.length === 0) {
             return res.status(404).json({ message: "No workouts found for this user." });

@@ -5,20 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ChevronDown, ChevronUp, EllipsisVertical, Plus, X } from 'lucide-react'
 import { useWorkout } from '@/contexts/WorkoutContext';
-import { WorkoutSet } from '@shared/types/workout';
+import { WorkoutItem, WorkoutSet } from '@shared/types/frontend';
 import Set from './Sets/Set';
 import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerClose, DrawerTrigger } from "@/components/ui/drawer";
+import { useAddWorkoutItem, useAddEmptyNormalSet } from '@/hooks/useWorkoutHooks';
+
 
 
 
 interface IEC_normalProps {
+    item: WorkoutItem
 }
 
 
 
 const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
-    const { workoutState, setWorkoutState } = useWorkout(); // 
 
+    const addEmptyNormalSet = useAddEmptyNormalSet();
     const [isExpanded, setIsExpanded] = React.useState(false)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -27,120 +30,65 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
     };
     // Handler for when an input in the child changes
     const inputchangeHandler = (index: number, field: string, newValue: any) => {
-        // Safely check if 'sets' array exists
-        if (!workoutState.workout.items[0].sets) {
-            console.error("Sets array is not initialized");
-            return;
-        }
 
-        const updatedSets = [...workoutState.workout.items[0].sets]; // Make a shallow copy of the sets
-
-        if (updatedSets[index]) {
-            // Check if the set at the specified index exists
-            updatedSets[index] = {
-                ...updatedSets[index],
-                [field]: newValue, // Update the specific field in the set
-            };
-        } else {
-            console.error("Set at index " + index + " does not exist");
-            return;
-        }
-
-        // Update the parent state
-        setWorkoutState({
-            ...workoutState.workout,
-            items: [
-                {
-                    ...workoutState.workout.items[0],
-                    sets: updatedSets,
-                },
-            ],
-        });
-
-
-
-        console.log(`got an input change ${index} ${field} ${newValue}`);
-    };
-
-    const addNormalSet = () => {
-        // Ensure sets array is initialized properly
-        if (!workoutState.workout.items[0].sets) {
-            console.error("Sets array is not initialized");
-            return;
-        }
-
-        const newSet: WorkoutSet = {
-            index: workoutState.workout.items[0].sets.lenght() + 1,
-            setType: "Normal", // Default set type
-            reps: 0,           // Default value
-            weight: 0,         // Default value
-
-        };
-
-        // Update the state to add the new set to the item with the name "Bench Press"
-        setWorkoutState({
-            ...workoutState.workout,
-            items: workoutState.workout.items.map((item: any) =>
-                item.name === "Bench Press"
-                    ? { ...item, sets: [...item.sets, newSet] } // Add the new set to the "Bench Press" item
-                    : item // Keep the rest of the items unchanged
-            ),
-        });
+        console.log(`inputchangeHandler ${index} ${field} ${newValue}`);
     };
 
     const addSpecialSet = (shortText: string) => {
-        console.log(shortText);
+        // console.log(shortText);
 
-        // Ensure sets array is initialized properly
-        if (!workoutState.workout.items[0].sets) {
-            console.error("Sets array is not initialized");
-            return;
-        }
+        // // Ensure sets array is initialized properly
+        // if (!workoutState.workout.items[0].sets) {
+        //     console.error("Sets array is not initialized");
+        //     return;
+        // }
 
-        // Create the appropriate WorkoutSet based on shortText using switch
-        let newSet: WorkoutSet | undefined;
+        // // Create the appropriate WorkoutSet based on shortText using switch
+        // let newSet: WorkoutSet | undefined;
 
-        switch (shortText) {
-            case "Drop":
-            case "Myorep":
-                newSet = {
-                    index: workoutState.workout.items[0].sets + 1,
-                    setType: shortText,   // Set the type directly
-                    drops: [{
-                        reps: 0,              // Default reps
-                        weight: 0
-                    }],            // Initialize with an empty drops array
+        // switch (shortText) {
+        //     case "Drop":
+        //     case "Myorep":
+        //         newSet = {
+        //             index: workoutState.workout.items[0].sets + 1,
+        //             setType: shortText,   // Set the type directly
+        //             drops: [{
+        //                 reps: 0,              // Default reps
+        //                 weight: 0
+        //             }],            // Initialize with an empty drops array
 
-                };
-                break;
+        //         };
+        //         break;
 
-            case "Warmup":
-                newSet = {
-                    index: workoutState.workout.items[0].sets + 1,
-                    setType: shortText,   // Set the type directly
-                    reps: 0,              // Default reps
-                    weight: 0,            // Default weight
+        //     case "Warmup":
+        //         newSet = {
+        //             index: workoutState.workout.items[0].sets + 1,
+        //             setType: shortText,   // Set the type directly
+        //             reps: 0,              // Default reps
+        //             weight: 0,            // Default weight
 
-                };
-                break;
+        //         };
+        //         break;
 
-            default:
-                console.error("Invalid special set type provided:", shortText);
-                return;
-        }
+        //     default:
+        //         console.error("Invalid special set type provided:", shortText);
+        //         return;
+        // }
 
-        // If a valid newSet was created, update the state
-        if (newSet) {
-            setWorkoutState({
-                ...workoutState.workout,
-                items: workoutState.workout.items.map((item: any) =>
-                    item.name === "Bench Press"  // Specify which item to update
-                        ? { ...item, sets: [...item.sets, newSet] }  // Add the new set to the "Bench Press" item
-                        : item // Keep the rest of the items unchanged
-                ),
-            });
-            toggleDrawer();
-        }
+        // // If a valid newSet was created, update the state
+        // if (newSet) {
+        //     setWorkoutState({
+        //         ...workoutState.workout,
+        //         items: workoutState.workout.items.map((item: any) =>
+        //             item.name === "Bench Press"  // Specify which item to update
+        //                 ? { ...item, sets: [...item.sets, newSet] }  // Add the new set to the "Bench Press" item
+        //                 : item // Keep the rest of the items unchanged
+        //         ),
+        //     });
+        //     toggleDrawer();
+        // }
+
+        console.log(`addSpecialSet ${shortText}`);
     };
 
     const options = {
@@ -151,22 +99,22 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
     return (
         <Card className="p-1 md:p-6">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2">
-                <CardTitle className="text-sm md:text-base font-medium">{workoutState.workout.items[0].name}</CardTitle>
+                <CardTitle className="text-sm md:text-base font-medium">{props.item.itemData.exercisesAndTheirSets[0].exerciseRef.name}</CardTitle>
                 <div>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    aria-label={isExpanded ? "Collapse drawer" : "Expand drawer"}
-                >
-                    {isExpanded ? <ChevronDown className="h-6 w-6" /> : <ChevronUp className="h-6 w-6" />}
-                </Button>
-                <Button variant="ghost" size="icon">
-                    <X className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon">
-                    <EllipsisVertical className="h-4 w-4" />
-                </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        aria-label={isExpanded ? "Collapse drawer" : "Expand drawer"}
+                    >
+                        {isExpanded ? <ChevronDown className="h-6 w-6" /> : <ChevronUp className="h-6 w-6" />}
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                        <X className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                        <EllipsisVertical className="h-4 w-4" />
+                    </Button>
                 </div>
 
             </CardHeader>
@@ -182,8 +130,8 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody className="text-xs">
-                        {workoutState.workout.items[0].sets.map((set: WorkoutSet, index: number) => (
-                            <Set set={set} index={index} inputchangeHandler={inputchangeHandler} key={index} />
+                        {props.item.itemData.exercisesAndTheirSets[0].sets.map((set: WorkoutSet) => (
+                            <Set set={set} index={set.index} inputchangeHandler={inputchangeHandler} key={set.index} />
                         ))}
                     </TableBody>
                 </Table>
@@ -220,7 +168,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
             </CardContent>
             <CardFooter className='p-3 md:p-4 flex-col gap-6 text-xs md:text-sm' >
                 <div className="w-full flex flex-col justify-between gap-2">
-                    <Button variant="secondary" className="text-xs md:text-sm " onClick={addNormalSet}>
+                    <Button variant="secondary" className="text-xs md:text-sm " onClick={() => addEmptyNormalSet(props.item._id, props.item.itemData.exercisesAndTheirSets[0].exerciseRef._id)}>
                         <Plus className="h-4 w-4 mr-2" /> Add Normal Set
                     </Button>
 
@@ -231,15 +179,15 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                 <div className="w-full flex justify-between text-center">
                     <div className="flex flex-col">
                         <span className="text-xs text-muted-foreground">Total Volume</span>
-                        <span className="font-medium">100 lbs</span>
+                        <span className="text-2xl md:text-xl font-medium">100 lbs</span>
                     </div>
                     <div className="flex flex-col">
                         <span className="text-xs text-muted-foreground">Total Weight</span>
-                        <span className="font-medium">100 lbs</span>
+                        <span className="text-2xl md:text-xl font-medium">100 lbs</span>
                     </div>
                     <div className="flex flex-col">
                         <span className="text-xs text-muted-foreground">Total Reps</span>
-                        <span className="font-medium">100 lbs</span>
+                        <span className="text-2xl md:text-xl font-medium">100 lbs</span>
                     </div>
                 </div>
             </CardFooter>

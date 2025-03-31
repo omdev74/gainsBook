@@ -6,16 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ChevronDown, ChevronUp, EllipsisVertical, Plus, X } from 'lucide-react'
 import { useWorkout } from '@/contexts/WorkoutContext';
-import { Exercise, WorkoutSet } from '@shared/types/workout';
+import { Exercise, WorkoutSet } from '@shared/types/frontend';
 import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerClose, DrawerTrigger } from "@/components/ui/drawer";
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Checkbox } from './ui/checkbox';
 import { InputCustom } from './ui/InputCustom';
-
+import { WorkoutItem } from '@shared/types/frontend';
 
 
 interface ISuperEC_superset {
+    item: WorkoutItem
 }
 
 const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
@@ -284,15 +285,15 @@ const EC_superset: React.FunctionComponent<ISuperEC_superset> = (props) => {
                 <div className="w-full flex justify-between text-center">
                     <div className="flex flex-col">
                         <span className="text-xs text-muted-foreground">Total Volume</span>
-                        <span className="font-medium">100 lbs</span>
+                        <span className="text-2xl md:text-xl font-medium">100 lbs</span>
                     </div>
                     <div className="flex flex-col">
                         <span className="text-xs text-muted-foreground">Total Weight</span>
-                        <span className="font-medium">100 lbs</span>
+                        <span className="text-2xl md:text-xl font-medium">100 lbs</span>
                     </div>
                     <div className="flex flex-col">
                         <span className="text-xs text-muted-foreground">Total Reps</span>
-                        <span className="font-medium">100 lbs</span>
+                        <span className="text-2xl md:text-xl font-medium">100 lbs</span>
                     </div>
                 </div>
             </CardFooter>
