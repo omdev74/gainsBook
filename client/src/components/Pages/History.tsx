@@ -31,12 +31,12 @@ export default function WorkoutHistory() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const cardRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-
+    const { isLoggedIn } = useContext(AuthContext);
     useEffect(() => {
         const fetchWorkouts = async () => {
             try {
                 // Access the authToken from the AuthContext
-                const { isLoggedIn } = useContext(AuthContext);
+            
                 const authToken = isLoggedIn ? localStorage.getItem("authToken") : null;
     
                 if (!authToken) {

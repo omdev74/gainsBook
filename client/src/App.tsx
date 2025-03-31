@@ -13,7 +13,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import WorkoutHistoryCustom from './components/Pages/WorkoutHistoryCustom';
 import WorkoutHistory from './components/Pages/History';
 import Exercise from './components/Pages/Exercise';
-import ExercisesCustom from './components/Pages/ExercisesCustom';
 
 import { WorkoutProvider, useWorkout } from './contexts/WorkoutContext';
 import { AuthContext } from './contexts/AuthContext'; // Assuming AuthContext is used for authentication.
@@ -60,7 +59,7 @@ const MainContent: React.FC = () => {
             <Route path="/historyd" element={<WorkoutHistory />} />
             <Route path="/exercisesyd" element={<Exercises />} />
             <Route path="/exercise/:id" element={<Exercise />} />
-            <Route path="/exercises" element={<ExercisesCustom />} />
+            <Route path="/exercises" element={<Exercises />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
           <Route path="*" element={<NotFound />} />
