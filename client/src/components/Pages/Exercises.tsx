@@ -136,12 +136,12 @@ export default function ExercisesCustom() {
                            
                             return (
                                 <li
-                                    key={exercise.id}
+                                    key={exercise._id}
                                     
                                     className={`flex w-full space-x-4 p-2 rounded-lg shadow-sm items-center cursor-pointer 
                         transition-all duration-200`}
                                 >
-                                    <NavLink to={`/exercise/${exercise.id}`} className="flex w-full space-x-4 p-2  rounded-lg shadow-sm items-center" > {/* Use w-full for full width */}
+                                    <NavLink to={`/exercise/${exercise._id}`} className="flex w-full space-x-4 p-2  rounded-lg shadow-sm items-center" > {/* Use w-full for full width */}
                                     <Avatar>
                                         <AvatarImage />
                                         <AvatarFallback>

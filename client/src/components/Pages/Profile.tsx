@@ -2,17 +2,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CalendarDays, Flame, Settings } from "lucide-react"
+import { useContext, useEffect } from "react"
 import { NavLink } from "react-router"
+import { AuthContext } from "@/contexts/AuthContext";
 
 export default function Profile() {
     // This data would typically come from an API or database
-    const user = {
+    const userExtented = {
         name: "Jane Doe",
-        username: "dasds",
+        email: "dasds",
         profileImage: "https://github.com/shadcn.png",
         followers: 1234,
         following: 567,
         streakDays: 15,
+        role: "Admin",
     }
 
     const recentWorkouts = [
@@ -20,7 +23,15 @@ export default function Profile() {
         { id: 2, type: "Weight Training", date: "2025-01-26", duration: "45 mins" },
         { id: 3, type: "Yoga", date: "2025-01-24", duration: "60 mins" },
     ]
+    const { user: contextUser } = useContext(AuthContext);
 
+    // Merge context user with mock data (context user properties take precedence)
+    const user = {
+        ...userExtented, // Default values
+        ...contextUser, // Context-provided values (overwrite defaults)
+    };
+    useEffect(() => {
+    })
     return (
         <>
             <nav className="bg-background sticky top-0 left-0 right-0 sm:hidden flex justify-between items-center z-10 p-2.5">
@@ -43,7 +54,7 @@ export default function Profile() {
                                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <CardTitle className="mt-4">{user.name}</CardTitle>
-                            <p className="text-muted-foreground">@{user.username}</p>
+                            <p className="text-muted-foreground">@{user.email}</p>
                         </CardHeader>
                         <CardContent>
                             <div className="flex justify-around text-center">
@@ -57,6 +68,10 @@ export default function Profile() {
                                 </div>
                             </div>
                             <Button className="w-full mt-4">Follow</Button>
+                            <div className="flex justify-around text-center">
+                                <p className="text-muted-foreground">{user.role}</p>
+
+                            </div>
                         </CardContent>
                     </Card>
 

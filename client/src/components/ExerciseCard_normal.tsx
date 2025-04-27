@@ -8,7 +8,7 @@ import { useWorkout } from '@/contexts/WorkoutContext';
 import { WorkoutItem, WorkoutSet } from '@shared/types/frontend';
 import Set from './Sets/Set';
 import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerClose, DrawerTrigger } from "@/components/ui/drawer";
-import { useAddWorkoutItem, useAddEmptyNormalSet } from '@/hooks/useWorkoutHooks';
+import {  useAddEmptyNormalSet } from '@/hooks/useWorkoutHooks';
 
 
 

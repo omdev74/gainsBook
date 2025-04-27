@@ -20,7 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import Loader from "../ui/loader"
 
 interface Exercise {
-    id: string
+    _id: string
     name: string
     muscle: string
     equipment: { name: string }[]
@@ -46,6 +46,9 @@ export default function ExercisesCustom({ onSelectExercises }: ExercisesCustomPr
         error,
         uniqueEquipment,
         uniqueMuscles,
+        exerciseTypeFilter,
+        setExerciseTypeFilter,
+
     } = useExercises()
 
     const [activeFilter, setActiveFilter] = useState<"equipment" | "muscle">("equipment")
@@ -55,11 +58,12 @@ export default function ExercisesCustom({ onSelectExercises }: ExercisesCustomPr
         const setFilter = type === "equipment" ? setEquipmentFilter : setMuscleFilter
         const currentFilter = type === "equipment" ? equipmentFilter : muscleFilter
         setFilter(currentFilter.includes(filter) ? currentFilter.filter((f) => f !== filter) : [...currentFilter, filter])
+        
     }
 
     const toggleExerciseSelection = (exercise: Exercise) => {
         setSelectedExercises((prev) =>
-            prev.some((e) => e.id === exercise.id) ? prev.filter((e) => e.id !== exercise.id) : [...prev, exercise],
+            prev.some((e) => e._id === exercise._id) ? prev.filter((e) => e._id !== exercise._id) : [...prev, exercise],
         )
     }
 
@@ -133,6 +137,7 @@ export default function ExercisesCustom({ onSelectExercises }: ExercisesCustomPr
                                     </div>
                                 </DrawerContent>
                             </Drawer>
+
                         </div>
                     </div>
                 </div>
@@ -144,10 +149,10 @@ export default function ExercisesCustom({ onSelectExercises }: ExercisesCustomPr
                         <Loader />
                     ) : exercises && exercises.length > 0 ? (
                         exercises.map((exercise) => {
-                            const isSelected = selectedExercises.some((e) => e.id === exercise.id);
+                            const isSelected = selectedExercises.some((e) => e._id === exercise._id);
                             return (
                                 <li
-                                    key={exercise.id}
+                                    key={exercise._id}
                                     onClick={() => toggleExerciseSelection(exercise)}
                                     className={`flex w-full space-x-4 p-2 rounded-lg shadow-sm items-center cursor-pointer 
                         transition-all duration-200 ${isSelected ? "bg-primary/10 border border-primary shadow-md" : "hover:bg-secondary/50"
@@ -168,6 +173,7 @@ export default function ExercisesCustom({ onSelectExercises }: ExercisesCustomPr
                                         <div className="flex flex-wrap gap-2 mt-1">
                                             <Badge variant="secondary">{exercise.muscle}</Badge>
                                             {exercise.equipment.length > 0 && <Badge variant="outline">{exercise.equipment[0].name}</Badge>}
+                                            {exercise.exerciseType === "CustomExercise" ? <Badge variant="outline">Custom</Badge>: <Badge variant="outline">Default</Badge>}
                                         </div>
                                     </div>
                                     <div className="text-sm text-gray-500">{exercise.sets} sets</div>

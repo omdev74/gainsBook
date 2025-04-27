@@ -104,6 +104,7 @@ export const useAddEmptyNormalSet = () => {
     const { workoutState, setWorkoutState } = useWorkout();
 
     const addEmptyNormalSet = (itemId: string, exerciseRefId: string) => {
+        console.log("addEmptyNormalSet", itemId, exerciseRefId);
         setWorkoutState((prevState) => {
             const updatedItems = prevState.workout.items.map((item) =>
                 item._id === itemId && item.itemData

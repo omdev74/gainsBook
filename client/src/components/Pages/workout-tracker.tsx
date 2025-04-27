@@ -8,8 +8,10 @@ import ExercisesCustom from "./ExercisesCustom";
 import WorkoutState from "./WorkoutState";
 import EC_normal from "../ExerciseCard_normal";
 import EC_superset from "../ExerciseCard_superset";
+import { useAddWorkoutItem } from '@/hooks/useWorkoutHooks';
 
 export default function WorkoutTrackershadcn() {
+  const addWorkoutItem = useAddWorkoutItem();
   const [isExpanded, setIsExpanded] = useState(false);
   const { workoutState, setWorkoutState } = useWorkout();
   const [isAddingExercise, setIsAddingExercise] = useState(false);
@@ -27,15 +29,75 @@ export default function WorkoutTrackershadcn() {
     setIsAddingExercise(true);
   };
 
-  const addExercisestoWorkout = (exercises: any) => {
+  const addExercisestoWorkoutAsIndividual = (exercises: any) => {
+    console.log("trying to add exercises to the workout as individual", exercises);
+
+    // Ensure you capture the current length of items before starting
+    const currentLength = workoutState.workout.items.length;
+
+    const items = exercises.map((exercise: any, index: number) => ({
+      itemType: 'Regular',
+      itemData: {
+        exercisesAndTheirSets: [
+          {
+            exerciseRef: { _id: exercise._id, name: exercise.name },
+            exerciseType: exercise.exerciseType,
+            sets: [
+              {
+                index: 1,
+                setType: 'Normal',
+                reps: 12,
+                weight: 0,
+                volume: 0, // Volume can be calculated dynamically
+              },
+            ],
+          },
+        ],
+      },
+      ExerciseNote: "Temporary Note",
+      _id: (currentLength + index + 1).toString(), // Ensure each exercise gets a unique ID
+    }));
+
+    console.log(items);
+    for (const item of items) {
+      addWorkoutItem(item);
+    }
+  };
+  const addExercisestoWorkoutAsSuperset = (exercises: any) => {
 
 
-    console.log("trying to add exercises to the workout", exercises);
+    console.log("trying to add exercises to the workout as superset", exercises);
+    const items = exercises.map((exercise: any) => ({
+      itemType: 'Superset',
+      itemData: {
+        exercisesAndTheirSets: [
+          {
+            exerciseRef: { _id: exercise._id, name: exercise.name },
+            exerciseType: exercise.exerciseType,
+            sets: [
+              {
+                index: 1,
+                setType: 'Normal',
+                reps: 12,
+                weight: 0,
+                volume: 0, // Volume can be calculated dynamically
+              },
+            ],
+          },
+        ],
+      },
+      ExerciseNote: "Temprorary Note",
+      _id: (workoutState.workout.items.length + 1).toString(),
+    }));
+    console.log(items);
+    for (const item of items) {
+      addWorkoutItem(item);
+    }
   };
 
   // call back function in the ExercisesCustom
-  const handleSelectedExercises = (exercises: any) => {
-    addExercisestoWorkout(exercises); // Save selected exercises
+  const handleSelectedExercises = (exercises: any, asSuperset: boolean) => {
+    asSuperset ? addExercisestoWorkoutAsSuperset(exercises) : addExercisestoWorkoutAsIndividual(exercises);
     setIsAddingExercise(false); // Hide the selection component
   };
 

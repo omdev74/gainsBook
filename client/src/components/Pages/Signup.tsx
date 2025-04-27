@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NavLink } from "react-router";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Dumbbell } from "lucide-react";
@@ -21,13 +22,17 @@ const backednURI = import.meta.env.VITE_BACKEND_URI;
 
 
 const formSchema = z.object({
-    name: z.string()
+    name: z
+        .string()
         .min(1, "Name is required")
         .max(50, "Name should not exceed 50 characters")
         .regex(/^[A-Za-z\s]+$/, "Name can only contain letters and spaces"),
     email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z.string().min(8, "Password must be at least 8 characters long")
+    confirmPassword: z.string().min(8, "Password must be at least 8 characters long"),
+    role: z.enum(["user", "trainer"], {
+        required_error: "Please select your role",
+    }),
 }).superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
         ctx.addIssue({
@@ -43,8 +48,11 @@ const formSchema = z.object({
 const SignUp01Page = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
+            name: "",
             email: "",
             password: "",
+            confirmPassword: "",
+            role: "user",
         },
         resolver: zodResolver(formSchema),
     });
@@ -52,7 +60,7 @@ const SignUp01Page = () => {
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             // Destructure the necessary fields
-            const { email, password, name } = data;
+            const { email, password, name, role } = data;
 
             // Prepare the data to send to the backend
             const response = await fetch(`${backednURI}/register`, {
@@ -60,7 +68,7 @@ const SignUp01Page = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name, email, password }), // Send name, email, and password
+                body: JSON.stringify({ name, email, password, role }), // Send name, email, and password
             });
 
             // Handle response
@@ -176,6 +184,45 @@ const SignUp01Page = () => {
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="role"
+                            render={({ field }) => (
+                                <FormItem className="space-y-3">
+                                    <FormLabel className="text-lg font-semibold">Who Are You?</FormLabel>
+                                    <FormControl>
+                                        <RadioGroup
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                            className="flex flex-col space-y-4"
+                                        >
+                                            <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                                                <FormControl>
+                                                    <RadioGroupItem value="user" />
+                                                </FormControl>
+                                                <div className="space-y-1">
+                                                    <FormLabel className="font-medium">Gym User</FormLabel>
+                                                    <p className="text-sm text-muted-foreground">Track your workouts and see your progress.</p>
+                                                </div>
+                                            </FormItem>
+                                            <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                                                <FormControl>
+                                                    <RadioGroupItem value="trainer" />
+                                                </FormControl>
+                                                <div className="space-y-1">
+                                                    <FormLabel className="font-medium">Trainer</FormLabel>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        Manage clients, create custom workout plans, and track their progress.
+                                                    </p>
+                                                </div>
+                                            </FormItem>
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
 
                         <Button type="submit" className="mt-4 w-full">
                             Continue with Email

@@ -8,7 +8,7 @@ import passport from 'passport';
 // Controller for user registration
 export const register = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
 
         // Check if user already exists
         const existingUser = await UserModel.findOne({ email });
@@ -20,7 +20,7 @@ export const register = async (req: Request, res: Response): Promise<any> => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create a new user
-        const newUser = new UserModel({ name, email, password: hashedPassword });
+        const newUser = new UserModel({ name, email, password: hashedPassword, role });
         await newUser.save();
 
         res.status(201).json({ message: 'User registered successfully', user: newUser });
