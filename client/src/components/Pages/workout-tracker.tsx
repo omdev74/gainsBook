@@ -63,37 +63,38 @@ export default function WorkoutTrackershadcn() {
       addWorkoutItem(item);
     }
   };
-  const addExercisestoWorkoutAsSuperset = (exercises: any) => {
+  const addExercisestoWorkoutAsSuperset = (exercises: any[]) => {
+  console.log("trying to add exercises to the workout as superset", exercises);
 
-
-    console.log("trying to add exercises to the workout as superset", exercises);
-    const items = exercises.map((exercise: any) => ({
-      itemType: 'Superset',
-      itemData: {
-        exercisesAndTheirSets: [
-          {
-            exerciseRef: { _id: exercise._id, name: exercise.name },
-            exerciseType: exercise.exerciseType,
-            sets: [
-              {
-                index: 1,
-                setType: 'Normal',
-                reps: 12,
-                weight: 0,
-                volume: 0, // Volume can be calculated dynamically
-              },
-            ],
-          },
-        ],
+  const exercisesAndTheirSets = exercises.map((exercise: any) => ({
+    exerciseRef: {
+      _id: exercise._id,
+      name: exercise.name,
+    },
+    exerciseType: exercise.exerciseType,
+    sets: [
+      {
+        index: 1,
+        setType: "Normal",
+        reps: 12,
+        weight: 0,
+        volume: 0,
       },
-      ExerciseNote: "Temprorary Note",
-      _id: (workoutState.workout.items.length + 1).toString(),
-    }));
-    console.log(items);
-    for (const item of items) {
-      addWorkoutItem(item);
-    }
+    ],
+  }));
+
+  const item = {
+    itemType: "Superset",
+    itemData: {
+      exercisesAndTheirSets,
+    },
+    ExerciseNote: "Temporary Note",
+    _id: (workoutState.workout.items.length + 1).toString(),
   };
+
+  console.log(item);
+  addWorkoutItem(item);
+};
 
   // call back function in the ExercisesCustom
   const handleSelectedExercises = (exercises: any, asSuperset: boolean) => {
@@ -158,20 +159,20 @@ export default function WorkoutTrackershadcn() {
           {/* Workout content */}
 
           {workoutState.workout.items.map((item, index) => (
-            item.itemType === "Regular" ? <EC_normal key={index} item={item} /> : null
+            item.itemType === "Regular" ? <EC_normal key={index} item={item} /> : <EC_superset key={index} item={item} />
           ))}
 
           {/* Buttons */}
           <div className="flex justify-between flex-col gap-2 w-full sm:w-1/3">
-            <Button variant="ghost" className="transition-colors" onClick={handleAddExercise}>
+            <Button variant="secondary" className="transition-colors" onClick={handleAddExercise}>
               <Plus className="h-4 w-4" />
               <span>Add exercises</span>
             </Button>
-            <Button variant="ghost" className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-colors" onClick={handleCancelWorkout}>
+            <Button variant="secondary" className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-colors" onClick={handleCancelWorkout}>
               <X className="h-4 w-4" />
               <span>Cancel workout</span>
             </Button>
-            <Button variant="ghost" className="text-green-600 hover:bg-green-600 hover:text-white transition-colors" onClick={() => console.log("Workout completed")}>
+            <Button variant="secondary" className="text-green-600 hover:bg-green-600 hover:text-white transition-colors" onClick={() => console.log("Workout completed")}>
               <Check className="h-4 w-4" />
               <span>Complete workout</span>
             </Button>

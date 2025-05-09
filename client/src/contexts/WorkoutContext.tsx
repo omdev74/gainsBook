@@ -40,7 +40,15 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                         "reps": 12,
                                         "weight": 0,
                                         "volume": 0
-                                    }
+                                    },
+                                    {
+                                        "index": 2,
+                                        "drops": [
+                                            { reps: 8, weight: 60 },
+                                            { reps: 8, weight: 60 },
+                                        ],
+                                        "setType": "Drop",
+                                    },
                                 ]
                             }
                         ]
@@ -54,8 +62,8 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                         "exercisesAndTheirSets": [
                             {
                                 "exerciseRef": {
-                                    "_id": "678ebf9115751d7decc978e3",
-                                    "name": "Barbell Hack Squats"
+                                    "_id": "678ebf9115751d7decc978e1",
+                                    "name": "Arnold Shoulder Press"
                                 },
                                 "exerciseType": "DefaultExercise",
                                 "sets": [
@@ -65,7 +73,15 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                         "reps": 10,
                                         "weight": 50,
                                         "volume": 500
-                                    }
+                                    },
+                                    {
+                                        "index": 2,
+                                        "drops": [
+                                            { reps: 8, weight: 60 },
+                                            { reps: 8, weight: 60 },
+                                        ],
+                                        "setType": "Drop",
+                                    },
                                 ]
                             },
                             {
@@ -81,7 +97,15 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                         "reps": 10,
                                         "weight": 50,
                                         "volume": 500
-                                    }
+                                    },
+                                    {
+                                        "index": 2,
+                                        "drops": [
+                                            { reps: 8, weight: 60 },
+                                            { reps: 8, weight: 60 },
+                                        ],
+                                        "setType": "Drop",
+                                    },
                                 ]
                             }
                         ]

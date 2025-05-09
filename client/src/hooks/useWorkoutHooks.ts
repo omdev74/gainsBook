@@ -109,29 +109,29 @@ export const useAddEmptyNormalSet = () => {
             const updatedItems = prevState.workout.items.map((item) =>
                 item._id === itemId && item.itemData
                     ? {
-                          ...item,
-                          itemData: {
-                              ...item.itemData,
-                              exercisesAndTheirSets: item.itemData.exercisesAndTheirSets.map(
-                                  (exercise) =>
-                                      exercise.exerciseRef._id === exerciseRefId
-                                          ? {
-                                                ...exercise,
-                                                sets: [
-                                                    ...exercise.sets,
-                                                    {
-                                                        index: exercise.sets.length + 1,
-                                                        setType: "Normal",
-                                                        reps: 0,
-                                                        weight: 0,
-                                                        volume: 0,
-                                                    } as WorkoutSet, // Explicitly cast to NormalSet
-                                                ],
-                                            }
-                                          : exercise
-                              ),
-                          },
-                      }
+                        ...item,
+                        itemData: {
+                            ...item.itemData,
+                            exercisesAndTheirSets: item.itemData.exercisesAndTheirSets.map(
+                                (exercise) =>
+                                    exercise.exerciseRef._id === exerciseRefId
+                                        ? {
+                                            ...exercise,
+                                            sets: [
+                                                ...exercise.sets,
+                                                {
+                                                    index: exercise.sets.length + 1,
+                                                    setType: "Normal",
+                                                    reps: 0,
+                                                    weight: 0,
+                                                    volume: 0,
+                                                } as WorkoutSet, // Explicitly cast to NormalSet
+                                            ],
+                                        }
+                                        : exercise
+                            ),
+                        },
+                    }
                     : item
             );
 
@@ -147,3 +147,96 @@ export const useAddEmptyNormalSet = () => {
 
     return addEmptyNormalSet;
 };
+
+export const useAddEmptySpecialSet = () => {
+    const { workoutState, setWorkoutState } = useWorkout();
+    const addEmptySpecialSet = (itemId: string, exerciseRefId: string, shortText: string) => {
+        console.log("addEmptySpecialSet", itemId, exerciseRefId, shortText);
+
+        switch (shortText) {
+
+            case "Warmup": setWorkoutState((prevState) => {
+                const updatedItems = prevState.workout.items.map((item) =>
+                    item._id === itemId && item.itemData
+                        ? {
+                            ...item,
+                            itemData: {
+                                ...item.itemData,
+                                exercisesAndTheirSets: item.itemData.exercisesAndTheirSets.map(
+                                    (exercise) =>
+                                        exercise.exerciseRef._id === exerciseRefId
+                                            ? {
+                                                ...exercise,
+                                                sets: [
+                                                    ...exercise.sets,
+                                                    {
+                                                        index: exercise.sets.length + 1,
+                                                        setType: shortText,
+                                                        reps: 0,
+                                                        weight: 0,
+                                                        volume: 0,
+                                                    } as WorkoutSet, // Explicitly cast to NormalSet
+                                                ],
+                                            }
+                                            : exercise
+                                ),
+                            },
+                        }
+                        : item
+                );
+
+                return {
+                    ...prevState,
+                    workout: {
+                        ...prevState.workout,
+                        items: updatedItems,
+                    },
+                };
+            });
+                break
+            case "Drop":
+            case "Myorep": setWorkoutState((prevState) => {
+                const updatedItems = prevState.workout.items.map((item) =>
+                    item._id === itemId && item.itemData
+                        ? {
+                            ...item,
+                            itemData: {
+                                ...item.itemData,
+                                exercisesAndTheirSets: item.itemData.exercisesAndTheirSets.map(
+                                    (exercise) =>
+                                        exercise.exerciseRef._id === exerciseRefId
+                                            ? {
+                                                ...exercise,
+                                                sets: [
+                                                    ...exercise.sets,
+                                                    {
+                                                        index: exercise.sets.length + 1,
+                                                        setType: shortText,
+                                                        drops: [{ reps: 0, weight: 0 }],
+                                                        volume: 0,
+                                                    } as WorkoutSet, // Explicitly cast to NormalSet
+                                                ],
+                                            }
+                                            : exercise
+                                ),
+                            },
+                        }
+                        : item
+                );
+
+                return {
+                    ...prevState,
+                    workout: {
+                        ...prevState.workout,
+                        items: updatedItems,
+                    },
+                };
+            });
+                break;
+            default: "Normal";
+        }
+
+    };
+
+    return addEmptySpecialSet;
+}

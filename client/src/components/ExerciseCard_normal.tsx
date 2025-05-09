@@ -8,7 +8,7 @@ import { useWorkout } from '@/contexts/WorkoutContext';
 import { WorkoutItem, WorkoutSet } from '@shared/types/frontend';
 import Set from './Sets/Set';
 import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerClose, DrawerTrigger } from "@/components/ui/drawer";
-import {  useAddEmptyNormalSet } from '@/hooks/useWorkoutHooks';
+import { useAddEmptyNormalSet, useAddEmptySpecialSet } from '@/hooks/useWorkoutHooks';
 
 
 
@@ -22,6 +22,7 @@ interface IEC_normalProps {
 const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
 
     const addEmptyNormalSet = useAddEmptyNormalSet();
+    const addSpecialSet = useAddEmptySpecialSet();
     const [isExpanded, setIsExpanded] = React.useState(false)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -34,62 +35,6 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         console.log(`inputchangeHandler ${index} ${field} ${newValue}`);
     };
 
-    const addSpecialSet = (shortText: string) => {
-        // console.log(shortText);
-
-        // // Ensure sets array is initialized properly
-        // if (!workoutState.workout.items[0].sets) {
-        //     console.error("Sets array is not initialized");
-        //     return;
-        // }
-
-        // // Create the appropriate WorkoutSet based on shortText using switch
-        // let newSet: WorkoutSet | undefined;
-
-        // switch (shortText) {
-        //     case "Drop":
-        //     case "Myorep":
-        //         newSet = {
-        //             index: workoutState.workout.items[0].sets + 1,
-        //             setType: shortText,   // Set the type directly
-        //             drops: [{
-        //                 reps: 0,              // Default reps
-        //                 weight: 0
-        //             }],            // Initialize with an empty drops array
-
-        //         };
-        //         break;
-
-        //     case "Warmup":
-        //         newSet = {
-        //             index: workoutState.workout.items[0].sets + 1,
-        //             setType: shortText,   // Set the type directly
-        //             reps: 0,              // Default reps
-        //             weight: 0,            // Default weight
-
-        //         };
-        //         break;
-
-        //     default:
-        //         console.error("Invalid special set type provided:", shortText);
-        //         return;
-        // }
-
-        // // If a valid newSet was created, update the state
-        // if (newSet) {
-        //     setWorkoutState({
-        //         ...workoutState.workout,
-        //         items: workoutState.workout.items.map((item: any) =>
-        //             item.name === "Bench Press"  // Specify which item to update
-        //                 ? { ...item, sets: [...item.sets, newSet] }  // Add the new set to the "Bench Press" item
-        //                 : item // Keep the rest of the items unchanged
-        //         ),
-        //     });
-        //     toggleDrawer();
-        // }
-
-        console.log(`addSpecialSet ${shortText}`);
-    };
 
     const options = {
         Drop: { shortText: "Drop", color: "border-transparent text-primary-foreground bg-blue-600" },
@@ -97,7 +42,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         Myorep: { shortText: "Myorep", color: "border-transparent text-primary-foreground bg-red-600" },
     };
     return (
-        <Card className="p-1 md:p-6">
+        <Card className="p-1 md:p-6 w-full max-w-6xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2">
                 <CardTitle className="text-sm md:text-base font-medium">{props.item.itemData.exercisesAndTheirSets[0].exerciseRef.name}</CardTitle>
                 <div>
@@ -151,7 +96,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                                     key={key}
                                     variant="outline"
                                     className={`w-full justify-start h-14 ${option.color}`}
-                                    onClick={() => addSpecialSet(option.shortText)}
+                                    onClick={() => addSpecialSet(props.item._id, props.item.itemData.exercisesAndTheirSets[0].exerciseRef._id, option.shortText)}
                                 >
                                     <span className="flex-1 text-left">{option.shortText}</span>
                                 </Button>
