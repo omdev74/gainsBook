@@ -2,20 +2,28 @@
 import { useWorkout } from "@/contexts/WorkoutContext";
 import { Button } from "../ui/button";
 import { Check, ChevronDown, ChevronUp, Plus, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import ExercisesCustom from "./ExercisesCustom";
 import WorkoutState from "./WorkoutState";
 import EC_normal from "../ExerciseCard_normal";
 import EC_superset from "../ExerciseCard_superset";
-import { useAddWorkoutItem } from '@/hooks/useWorkoutHooks';
+import { useAddWorkoutItem, useDrawerToggle } from '@/hooks/useWorkoutHooks';
+import { useLocation } from "react-router";
 
 export default function WorkoutTrackershadcn() {
   const addWorkoutItem = useAddWorkoutItem();
-  const [isExpanded, setIsExpanded] = useState(false);
+
+  const { isExpanded, toggle, collapse, expand } = useDrawerToggle();
   const { workoutState, setWorkoutState } = useWorkout();
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const { toast } = useToast();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    collapse();
+  }, [location.pathname]);
 
   const handleCancelWorkout = () => {
     setWorkoutState({ ...workoutState, ongoing: false });
@@ -64,37 +72,37 @@ export default function WorkoutTrackershadcn() {
     }
   };
   const addExercisestoWorkoutAsSuperset = (exercises: any[]) => {
-  console.log("trying to add exercises to the workout as superset", exercises);
+    console.log("trying to add exercises to the workout as superset", exercises);
 
-  const exercisesAndTheirSets = exercises.map((exercise: any) => ({
-    exerciseRef: {
-      _id: exercise._id,
-      name: exercise.name,
-    },
-    exerciseType: exercise.exerciseType,
-    sets: [
-      {
-        index: 1,
-        setType: "Normal",
-        reps: 12,
-        weight: 0,
-        volume: 0,
+    const exercisesAndTheirSets = exercises.map((exercise: any) => ({
+      exerciseRef: {
+        _id: exercise._id,
+        name: exercise.name,
       },
-    ],
-  }));
+      exerciseType: exercise.exerciseType,
+      sets: [
+        {
+          index: 1,
+          setType: "Normal",
+          reps: 12,
+          weight: 0,
+          volume: 0,
+        },
+      ],
+    }));
 
-  const item = {
-    itemType: "Superset",
-    itemData: {
-      exercisesAndTheirSets,
-    },
-    ExerciseNote: "Temporary Note",
-    _id: (workoutState.workout.items.length + 1).toString(),
+    const item = {
+      itemType: "Superset",
+      itemData: {
+        exercisesAndTheirSets,
+      },
+      ExerciseNote: "Temporary Note",
+      _id: (workoutState.workout.items.length + 1).toString(),
+    };
+
+    console.log(item);
+    addWorkoutItem(item);
   };
-
-  console.log(item);
-  addWorkoutItem(item);
-};
 
   // call back function in the ExercisesCustom
   const handleSelectedExercises = (exercises: any, asSuperset: boolean) => {
@@ -146,7 +154,7 @@ export default function WorkoutTrackershadcn() {
             <Button
               variant="secondary"
               size="icon"
-              onClick={() => setIsExpanded(!isExpanded)}
+              onClick={toggle}
               aria-label={isExpanded ? "Collapse drawer" : "Expand drawer"}
             >
               {isExpanded ? <ChevronDown className="h-6 w-6" /> : <ChevronUp className="h-6 w-6" />}

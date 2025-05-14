@@ -1,7 +1,7 @@
 // useWorkoutHooks.ts
 import { useWorkout } from '@/contexts/WorkoutContext';
 import { ExerciseSet, WorkoutSet } from '@shared/types/frontend';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 
 export const useToggleOngoing = () => {
@@ -63,42 +63,6 @@ export const useAddWorkoutItem = () => {
 
     return addWorkoutItem;
 };
-
-// export const useUpdateExercise = () => {
-//     const { workoutState, setWorkoutState } = useWorkout();
-
-//     const updateExercise = (itemId: string, updatedExerciseData: any) => {
-//         setWorkoutState((prevState) => {
-//             const updatedItems = prevState.workout.items.map((item) =>
-//                 item._id === itemId
-//                     ? {
-//                         ...item,
-//                         itemData: {
-//                             ...item.itemData,
-//                             exercisesAndTheirSets: item.itemData.exercisesAndTheirSets.map(
-//                                 (exercise: ExerciseSet) =>
-//                                     exercise.exerciseRef._id === updatedExerciseData.exerciseRef._id
-//                                         ? { ...exercise, ...updatedExerciseData }
-//                                         : exercise
-//                             ),
-//                         },
-//                     }
-//                     : item
-//             );
-
-//             return {
-//                 ...prevState,
-//                 workout: {
-//                     ...prevState.workout,
-//                     items: updatedItems,
-//                 },
-//             };
-//         });
-//     };
-
-//     return updateExercise;
-// };
-
 
 export const useUpdateExerciseField = () => {
     const { workoutState, setWorkoutState } = useWorkout();
@@ -288,4 +252,14 @@ export const useAddEmptySpecialSet = () => {
     };
 
     return addEmptySpecialSet;
+}
+
+export function useDrawerToggle(defaultState: boolean = false) {
+  const [isExpanded, setIsExpanded] = useState(defaultState);
+
+  const toggle = () => setIsExpanded(prev => !prev);
+  const collapse = () => setIsExpanded(false);
+  const expand = () => setIsExpanded(true);
+
+  return { isExpanded, setIsExpanded, toggle, collapse, expand };
 }

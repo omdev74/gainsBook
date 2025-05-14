@@ -11,6 +11,7 @@ import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerC
 import { useAddEmptyNormalSet, useAddEmptySpecialSet } from '@/hooks/useWorkoutHooks';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { ProgressChart } from './ProgressChart';
+import { NavLink } from 'react-router';
 
 
 
@@ -35,7 +36,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
     const addEmptyNormalSet = useAddEmptyNormalSet();
     const addSpecialSet = useAddEmptySpecialSet();
     const [showGraphs, setShowGraphs] = useState(false)
-    const [isExpanded, setIsExpanded] = React.useState(false)
+    const [isExpanded, setIsExpanded] = React.useState(true)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const toggleDrawer = () => {
@@ -96,7 +97,13 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
     return (
         <Card className="p-1 md:p-6 w-full max-w-6xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2">
-                <CardTitle className="text-sm md:text-base font-medium">{props.item.itemData.exercisesAndTheirSets[0].exerciseRef.name}</CardTitle>
+                <CardTitle className="text-sm md:text-base font-medium">
+
+                    <NavLink to={`/exercise/${props.item.itemData.exercisesAndTheirSets[0].exerciseRef._id}`} className="flex w-full space-x-4 p-2  rounded-lg shadow-sm items-center" >
+                        {props.item.itemData.exercisesAndTheirSets[0].exerciseRef.name}
+                    </NavLink>
+
+                </CardTitle>
                 <div>
                     <Button
                         variant="ghost"

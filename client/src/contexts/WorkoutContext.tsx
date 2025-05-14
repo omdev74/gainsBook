@@ -29,7 +29,7 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                         "exercisesAndTheirSets": [
                             {
                                 "exerciseRef": {
-                                    "_id": "678ebf9115751d7decc978e1",
+                                    "_id": "53ca25b3-61d9-4f72-bfdb-492b83484ff5",
                                     "name": "Arnold Shoulder Press"
                                 },
                                 "exerciseType": "DefaultExercise",

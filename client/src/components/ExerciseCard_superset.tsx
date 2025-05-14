@@ -28,7 +28,7 @@ const EC_superset: React.FunctionComponent<IEC_supersetProps> = (props) => {
   const [showGraphs, setShowGraphs] = useState(false)
   const addEmptyNormalSet = useAddEmptyNormalSet();
   const addSpecialSet = useAddEmptySpecialSet();
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isExpanded, setIsExpanded] = React.useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
