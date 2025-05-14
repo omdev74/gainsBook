@@ -100,7 +100,7 @@ const EC_superset: React.FunctionComponent<IEC_supersetProps> = (props) => {
             onClick={() => setIsExpanded(!isExpanded)}
             aria-label={isExpanded ? "Collapse drawer" : "Expand drawer"}
           >
-            {isExpanded ? <ChevronDown className="h-6 w-6" /> : <ChevronUp className="h-6 w-6" />}
+            {isExpanded ? <ChevronUp className="h-6 w-6" /> : <ChevronDown className="h-6 w-6" />}
           </Button>
           <Button variant="ghost" size="icon">
             <X className="h-4 w-4" />
@@ -133,19 +133,21 @@ const EC_superset: React.FunctionComponent<IEC_supersetProps> = (props) => {
         </div>
       </CardHeader>
 
-      <CardContent className="p-1">
-        <Table className="w-full table-auto border-collapse">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-xs md:text-sm px-2">Set</TableHead>
-              {/* <TableHead className="text-xs md:text-sm px-2">Previous</TableHead> */}
-              <TableHead className="text-xs md:text-sm px-2">Exercise</TableHead>
-              <TableHead className="text-xs md:text-sm px-2">Lbs</TableHead>
-              <TableHead className="text-xs md:text-sm px-2">Reps</TableHead>
-              <TableHead className="text-xs md:text-sm text-right px-2">Volume</TableHead>
-            </TableRow>
-          </TableHeader>
-          {/* <TableBody className="text-xs">
+      {isExpanded && (
+        <>
+          <CardContent className="p-1">
+            <Table className="w-full table-auto border-collapse">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-xs md:text-sm px-2">Set</TableHead>
+                  {/* <TableHead className="text-xs md:text-sm px-2">Previous</TableHead> */}
+                  <TableHead className="text-xs md:text-sm px-2">Exercise</TableHead>
+                  <TableHead className="text-xs md:text-sm px-2">Lbs</TableHead>
+                  <TableHead className="text-xs md:text-sm px-2">Reps</TableHead>
+                  <TableHead className="text-xs md:text-sm text-right px-2">Volume</TableHead>
+                </TableRow>
+              </TableHeader>
+              {/* <TableBody className="text-xs">
             {props.item.itemData.exercisesAndTheirSets.map((exerciseSet, exerciseSetIndex) => (
               exerciseSet.sets.map((set: WorkoutSet, setIndex) => (
                 <Superset
@@ -161,7 +163,7 @@ const EC_superset: React.FunctionComponent<IEC_supersetProps> = (props) => {
           </TableBody> */}
 
 
-          {/* <Superset
+              {/* <Superset
               sets={[props.item.itemData.exercisesAndTheirSets[0].sets[0], props.item.itemData.exercisesAndTheirSets[1].sets[0]]}
               index={1}
               inputchangeHandler={(setIndex, key, value) => {
@@ -170,145 +172,147 @@ const EC_superset: React.FunctionComponent<IEC_supersetProps> = (props) => {
             /> */}
 
 
-          <TableBody className="text-xs">
-            {props.item.itemData.exercisesAndTheirSets[0].sets.map((_, setIndex) => {
-              // Build superset group from all exercises at current setIndex
-              const supersetGroup = props.item.itemData.exercisesAndTheirSets.map((exerciseSet, exerciseSetIndex) => {
-                const set = exerciseSet.sets[setIndex];
-                return {
-                  ...set,
-                  exerciseName: exerciseSet.exerciseRef?.name || "Unnamed Exercise",
-                  exerciseSetIndex,
-                };
-              });
+              <TableBody className="text-xs">
+                {props.item.itemData.exercisesAndTheirSets[0].sets.map((_, setIndex) => {
+                  // Build superset group from all exercises at current setIndex
+                  const supersetGroup = props.item.itemData.exercisesAndTheirSets.map((exerciseSet, exerciseSetIndex) => {
+                    const set = exerciseSet.sets[setIndex];
+                    return {
+                      ...set,
+                      exerciseName: exerciseSet.exerciseRef?.name || "Unnamed Exercise",
+                      exerciseSetIndex,
+                    };
+                  });
 
-              // Use the actual index from the first set (assumes they all share it)
-              const displayedIndex = supersetGroup[0]?.index ?? setIndex + 1;
+                  // Use the actual index from the first set (assumes they all share it)
+                  const displayedIndex = supersetGroup[0]?.index ?? setIndex + 1;
 
-              return (
-                <Superset
-                  itemId={props.item._id}
-                  key={setIndex}
-                  sets={supersetGroup}
-                  index={displayedIndex}
-                  inputchangeHandler={inputChangeHandler}
-                />
-              );
-            })}
+                  return (
+                    <Superset
+                      itemId={props.item._id}
+                      key={setIndex}
+                      sets={supersetGroup}
+                      index={displayedIndex}
+                      inputchangeHandler={inputChangeHandler}
+                    />
+                  );
+                })}
 
-          </TableBody>
-
-
-
-        </Table>
+              </TableBody>
 
 
-        {/* Drawer for selecting special sets from options */}
-        <Drawer open={isDrawerOpen} onClose={toggleDrawer}>
-          <DrawerContent className="sm:p-6 flex flex-col items-center justify-center">
-            <DrawerHeader>
-              <DrawerTitle>Select a Special Set Type</DrawerTitle>
-            </DrawerHeader>
-            <div className="w-full max-w-sm space-y-2">
-              {Object.entries(options).map(([key, option]) => (
-                <Button
-                  key={key}
-                  variant="outline"
-                  className={`w-full justify-start h-14 ${option.color}`}
-                  onClick={() => addSpecialSet(props.item._id, props.item.itemData.exercisesAndTheirSets[0].exerciseRef._id, option.shortText)}
-                >
-                  <span className="flex-1 text-left">{option.shortText}</span>
-                </Button>
-              ))}
+
+            </Table>
+
+
+            {/* Drawer for selecting special sets from options */}
+            <Drawer open={isDrawerOpen} onClose={toggleDrawer}>
+              <DrawerContent className="sm:p-6 flex flex-col items-center justify-center">
+                <DrawerHeader>
+                  <DrawerTitle>Select a Special Set Type</DrawerTitle>
+                </DrawerHeader>
+                <div className="w-full max-w-sm space-y-2">
+                  {Object.entries(options).map(([key, option]) => (
+                    <Button
+                      key={key}
+                      variant="outline"
+                      className={`w-full justify-start h-14 ${option.color}`}
+                      onClick={() => addSpecialSet(props.item._id, props.item.itemData.exercisesAndTheirSets[0].exerciseRef._id, option.shortText)}
+                    >
+                      <span className="flex-1 text-left">{option.shortText}</span>
+                    </Button>
+                  ))}
+                </div>
+
+                <DrawerFooter>
+                  <DrawerClose>
+                    <Button variant="outline">Cancel</Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
+          </CardContent>
+
+          <CardFooter className="p-3 md:p-4 flex-col gap-6 text-xs md:text-sm">
+            <div className="w-full flex flex-col justify-between gap-2">
+              <Button
+                variant="secondary"
+                className="text-xs md:text-sm"
+                onClick={() =>
+                  addEmptyNormalSet(
+                    props.item._id,
+                    props.item.itemData.exercisesAndTheirSets.map(
+                      (exercise) => exercise.exerciseRef._id
+                    )
+                  )
+                }
+
+              >
+                <Plus className="h-4 w-4 mr-2" /> Add Normal Set
+              </Button>
+
+              <Button
+                variant="secondary"
+                className="text-xs md:text-sm"
+                onClick={toggleDrawer}
+              >
+                <Plus className="h-4 w-4 mr-2" /> Add Special Set
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full mt-3 text-muted-foreground"
+                onClick={() => setShowGraphs(!showGraphs)}
+              >
+                {showGraphs ? (
+
+                  <>
+                    <ChevronUp className="h-4 w-4 mr-2" />
+                    Hide Progression Graphs
+                  </>
+                ) : (
+
+                  <>
+                    <ChevronDown className="h-4 w-4 mr-2" />
+                    Show Progression Graphs
+                  </>
+                )}
+              </Button>
+
+              {/* Accordion for graphs */}
+              {showGraphs && (
+                <div className="mt-4 pt-4 border-t border-muted">
+                  <div className="space-y-6">
+                    <div>
+                      <div className="text-sm font-medium mb-2">Weight Progression:</div>
+                      <ProgressChart currentValues={weights} previousValues={weights} label="lbs" />
+                    </div>
+
+                    <div>
+                      <div className="text-sm font-medium mb-2">Volume Progression:</div>
+                      <ProgressChart currentValues={volumes} previousValues={weights} label="lbs" />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <DrawerFooter>
-              <DrawerClose>
-                <Button variant="outline">Cancel</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      </CardContent>
-
-      <CardFooter className="p-3 md:p-4 flex-col gap-6 text-xs md:text-sm">
-        <div className="w-full flex flex-col justify-between gap-2">
-          <Button
-            variant="secondary"
-            className="text-xs md:text-sm"
-            onClick={() =>
-              addEmptyNormalSet(
-                props.item._id,
-                props.item.itemData.exercisesAndTheirSets.map(
-                  (exercise) => exercise.exerciseRef._id
-                )
-              )
-            }
-
-          >
-            <Plus className="h-4 w-4 mr-2" /> Add Normal Set
-          </Button>
-
-          <Button
-            variant="secondary"
-            className="text-xs md:text-sm"
-            onClick={toggleDrawer}
-          >
-            <Plus className="h-4 w-4 mr-2" /> Add Special Set
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full mt-3 text-muted-foreground"
-            onClick={() => setShowGraphs(!showGraphs)}
-          >
-            {showGraphs ? (
-
-              <>
-                <ChevronUp className="h-4 w-4 mr-2" />
-                Hide Progression Graphs
-              </>
-            ) : (
-
-              <>
-                <ChevronDown className="h-4 w-4 mr-2" />
-                Show Progression Graphs
-              </>
-            )}
-          </Button>
-
-          {/* Accordion for graphs */}
-          {showGraphs && (
-            <div className="mt-4 pt-4 border-t border-muted">
-              <div className="space-y-6">
-                <div>
-                  <div className="text-sm font-medium mb-2">Weight Progression:</div>
-                  <ProgressChart currentValues={weights} previousValues={weights} label="lbs" />
-                </div>
-
-                <div>
-                  <div className="text-sm font-medium mb-2">Volume Progression:</div>
-                  <ProgressChart currentValues={volumes} previousValues={weights} label="lbs" />
-                </div>
+            <div className="w-full flex justify-between text-center">
+              <div className="flex flex-col">
+                <span className="text-xs text-muted-foreground">Total Volume</span>
+                <span className="text-2xl md:text-xl font-medium">100 lbs</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs text-muted-foreground">Total Weight</span>
+                <span className="text-2xl md:text-xl font-medium">100 lbs</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs text-muted-foreground">Total Reps</span>
+                <span className="text-2xl md:text-xl font-medium">100 reps</span>
               </div>
             </div>
-          )}
-        </div>
-
-        <div className="w-full flex justify-between text-center">
-          <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">Total Volume</span>
-            <span className="text-2xl md:text-xl font-medium">100 lbs</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">Total Weight</span>
-            <span className="text-2xl md:text-xl font-medium">100 lbs</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">Total Reps</span>
-            <span className="text-2xl md:text-xl font-medium">100 reps</span>
-          </div>
-        </div>
-      </CardFooter>
+          </CardFooter>
+        </>
+      )}
     </Card>
   );
 };
