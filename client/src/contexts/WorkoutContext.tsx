@@ -43,9 +43,17 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                     },
                                     {
                                         "index": 2,
+                                        "setType": "Normal",
+                                        "reps": 20,
+                                        "weight": 100,
+                                        "volume": 500
+                                    },
+                                    {
+                                        "index": 3,
                                         "drops": [
                                             { reps: 8, weight: 60 },
                                             { reps: 8, weight: 60 },
+                                            { reps: 6, weight: 100 },
                                         ],
                                         "setType": "Drop",
                                     },
@@ -76,6 +84,13 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                     },
                                     {
                                         "index": 2,
+                                        "setType": "Normal",
+                                        "reps": 20,
+                                        "weight": 100,
+                                        "volume": 500
+                                    },
+                                    {
+                                        "index": 3,
                                         "drops": [
                                             { reps: 8, weight: 60 },
                                             { reps: 8, weight: 60 },
@@ -100,6 +115,14 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                                     },
                                     {
                                         "index": 2,
+                                        "drops": [
+                                            { reps: 8, weight: 60 },
+                                            { reps: 8, weight: 60 },
+                                        ],
+                                        "setType": "Drop",
+                                    },
+                                    {
+                                        "index": 3,
                                         "drops": [
                                             { reps: 8, weight: 60 },
                                             { reps: 8, weight: 60 },

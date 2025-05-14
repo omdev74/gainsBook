@@ -7,12 +7,12 @@ interface BaseSet {
   prevSetRef?: string;
 }
 
-interface RepetitiveSet extends BaseSet {
+export interface RepetitiveSet extends BaseSet {
   reps: number;
   weight: number;
 }
 
-interface DroppableSet extends BaseSet {
+export interface DroppableSet extends BaseSet {
   drops: Array<{ reps: number; weight: number }>;
 }
 
@@ -96,5 +96,5 @@ export interface Workout extends Record<string, unknown> {
   TotalExercises: number;
   createdAt: string;
   updatedAt: string;
-  
+
 }

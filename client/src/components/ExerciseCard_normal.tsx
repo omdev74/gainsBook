@@ -3,12 +3,15 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ChevronDown, ChevronUp, EllipsisVertical, Plus, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, EllipsisVertical, MoreVertical, Plus, TrendingUp, X } from 'lucide-react'
 import { useWorkout } from '@/contexts/WorkoutContext';
-import { WorkoutItem, WorkoutSet } from '@shared/types/frontend';
+import { DroppableSet, NormalSet, RepetitiveSet, WarmupSet, WorkoutItem, WorkoutSet } from '@shared/types/frontend';
 import Set from './Sets/Set';
 import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerClose, DrawerTrigger } from "@/components/ui/drawer";
 import { useAddEmptyNormalSet, useAddEmptySpecialSet } from '@/hooks/useWorkoutHooks';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { ProgressChart } from './ProgressChart';
+
 
 
 
@@ -21,8 +24,17 @@ interface IEC_normalProps {
 
 const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
 
+    const weights = props.item.itemData.exercisesAndTheirSets[0].sets
+        .filter((set): set is NormalSet | WarmupSet => set.setType === "Normal" || set.setType === "Warmup")
+        .map(set => set.weight)
+    const volumes = props.item.itemData.exercisesAndTheirSets[0].sets
+        .filter((set): set is NormalSet | WarmupSet => set.setType === "Normal" || set.setType === "Warmup")
+        .map(set => set.weight * set.reps)
+
+    const { workoutState, setWorkoutState } = useWorkout();
     const addEmptyNormalSet = useAddEmptyNormalSet();
     const addSpecialSet = useAddEmptySpecialSet();
+    const [showGraphs, setShowGraphs] = useState(false)
     const [isExpanded, setIsExpanded] = React.useState(false)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -30,9 +42,49 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
         setIsDrawerOpen(!isDrawerOpen);
     };
     // Handler for when an input in the child changes
-    const inputchangeHandler = (index: number, field: string, newValue: any) => {
+    const inputChangeHandler = (
+        itemId: string,
+        exerciseIndex: number,
+        setIndex: number,
+        field: "reps" | "weight",
+        value: number,
+        dropIndex?: number
+    ) => {
+        console.log(`Input changed: itemId=${itemId}, exerciseIndex=${exerciseIndex}, setIndex=${setIndex}, field=${field}, value=${value}, dropIndex=${dropIndex}`);
+        setWorkoutState((prevState) => {
+            const newItems = [...prevState.workout.items];
 
-        console.log(`inputchangeHandler ${index} ${field} ${newValue}`);
+            const workoutItem = newItems.find((item) => item._id === itemId);
+            if (!workoutItem || !workoutItem.itemData) return prevState;
+
+            const exerciseSet = workoutItem.itemData.exercisesAndTheirSets[exerciseIndex];
+
+            // Adjust setIndex here to account for the 1-based index in the data
+            const adjustedSetIndex = setIndex - 1; // Subtracting 1 for zero-based index
+
+            const targetSet = exerciseSet.sets[adjustedSetIndex];
+
+            if (targetSet.setType === "Normal" || targetSet.setType === "Warmup") {
+                (targetSet as RepetitiveSet)[field] = value;
+                (targetSet as RepetitiveSet).volume =
+                    (targetSet as RepetitiveSet).reps * (targetSet as RepetitiveSet).weight;
+            } else if (targetSet.setType === "Drop" || targetSet.setType === "Myorep") {
+                if (dropIndex !== undefined) {
+                    const drop = (targetSet as DroppableSet).drops[dropIndex];
+                    if (drop) {
+                        drop[field] = value;
+                    }
+                }
+            }
+
+            return {
+                ...prevState,
+                workout: {
+                    ...prevState.workout,
+                    items: newItems,
+                },
+            };
+        });
     };
 
 
@@ -57,17 +109,39 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                     <Button variant="ghost" size="icon">
                         <X className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon">
-                        <EllipsisVertical className="h-4 w-4" />
-                    </Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreVertical className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() =>
+                                addEmptyNormalSet(
+                                    props.item._id,
+                                    props.item.itemData.exercisesAndTheirSets.map(
+                                        (exercise) => exercise.exerciseRef._id
+                                    )
+                                )
+                            }
+                            >
+                                <Plus className="h-4 w-4 mr-2" />
+                                Add Normal Set
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setShowGraphs(!showGraphs)}>
+                                <TrendingUp className="h-4 w-4 mr-2" />
+                                {showGraphs ? "Hide Graphs" : "Show Graphs"}
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
 
             </CardHeader>
-            <CardContent className="sm: p-1">
+            <CardContent className="p-1">
                 <Table className="w-full table-auto border-collapse">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[60px] text-xs md:text-sm px-2">Set</TableHead>
+                            <TableHead className="text-xs md:text-sm px-2">Set</TableHead>
                             <TableHead className="text-xs md:text-sm px-2">Previous</TableHead>
                             <TableHead className="text-xs md:text-sm px-2">Lbs</TableHead>
                             <TableHead className="text-xs md:text-sm px-2">Reps</TableHead>
@@ -76,10 +150,56 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                     </TableHeader>
                     <TableBody className="text-xs">
                         {props.item.itemData.exercisesAndTheirSets[0].sets.map((set: WorkoutSet) => (
-                            <Set set={set} index={set.index} inputchangeHandler={inputchangeHandler} key={set.index} />
+                            <Set
+                                set={set}
+                                index={set.index}
+                                exerciseIndex={0}  // Update this if you need to iterate over multiple exercises
+                                itemId={props.item._id}  // Assuming item._id exists and is the unique identifier
+                                inputchangeHandler={inputChangeHandler}
+                                key={set.index}
+                            />
                         ))}
+
                     </TableBody>
                 </Table>
+
+
+                <Button
+                    variant="ghost"
+                    className="w-full mt-3 text-muted-foreground"
+                    onClick={() => setShowGraphs(!showGraphs)}
+                >
+                    {showGraphs ? (
+
+                        <>
+                            <ChevronUp className="h-4 w-4 mr-2" />
+                            Hide Progression Graphs
+                        </>
+                    ) : (
+
+                        <>
+                            <ChevronDown className="h-4 w-4 mr-2" />
+                            Show Progression Graphs
+                        </>
+                    )}
+                </Button>
+
+                {/* Accordion for graphs */}
+                {showGraphs && (
+                    <div className="mt-4 pt-4 border-t border-muted">
+                        <div className="space-y-6">
+                            <div>
+                                <div className="text-sm font-medium mb-2">Weight Progression:</div>
+                                <ProgressChart currentValues={weights} previousValues={weights} label="lbs" />
+                            </div>
+
+                            <div>
+                                <div className="text-sm font-medium mb-2">Volume Progression:</div>
+                                <ProgressChart currentValues={volumes} previousValues={weights} label="lbs" />
+                            </div>
+                        </div>
+                    </div>
+                )}
 
 
 
@@ -113,7 +233,12 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
             </CardContent>
             <CardFooter className='p-3 md:p-4 flex-col gap-6 text-xs md:text-sm' >
                 <div className="w-full flex flex-col justify-between gap-2">
-                    <Button variant="secondary" className="text-xs md:text-sm " onClick={() => addEmptyNormalSet(props.item._id, props.item.itemData.exercisesAndTheirSets[0].exerciseRef._id)}>
+                    <Button variant="secondary" className="text-xs md:text-sm " onClick={() => addEmptyNormalSet(
+                        props.item._id,
+                        props.item.itemData.exercisesAndTheirSets.map(
+                            (exercise) => exercise.exerciseRef._id
+                        )
+                    )}>
                         <Plus className="h-4 w-4 mr-2" /> Add Normal Set
                     </Button>
 

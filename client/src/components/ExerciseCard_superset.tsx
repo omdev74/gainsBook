@@ -38,11 +38,11 @@ const EC_superset: React.FunctionComponent<IEC_supersetProps> = (props) => {
   return (
     <Card className="p-1 md:p-6 w-full max-w-6xl" >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2">
-        <CardTitle className="text-sm md:text-base font-medium"><CardTitle className="text-sm md:text-base font-medium">
+        <CardTitle className="text-sm md:text-base font-medium whitespace-normal">
           {props.item.itemData.exercisesAndTheirSets.map((exerciseSet, index) =>
             exerciseSet.exerciseRef.name).join(' + ')}
-        </CardTitle></CardTitle>
-        <div>
+        </CardTitle>
+        <div className='min-w-[120px]'>
           <Button
             variant="ghost"
             size="icon"
@@ -60,11 +60,11 @@ const EC_superset: React.FunctionComponent<IEC_supersetProps> = (props) => {
         </div>
       </CardHeader>
 
-      <CardContent className="sm:p-1">
+      <CardContent className="p-1">
         <Table className="w-full table-auto border-collapse">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[60px] text-xs md:text-sm px-2">Set</TableHead>
+              <TableHead className="text-xs md:text-sm px-2">Set</TableHead>
               {/* <TableHead className="text-xs md:text-sm px-2">Previous</TableHead> */}
               <TableHead className="text-xs md:text-sm px-2">Exercise</TableHead>
               <TableHead className="text-xs md:text-sm px-2">Lbs</TableHead>
@@ -162,7 +162,15 @@ const EC_superset: React.FunctionComponent<IEC_supersetProps> = (props) => {
           <Button
             variant="secondary"
             className="text-xs md:text-sm"
-            onClick={() => addEmptyNormalSet(props.item._id, props.item.itemData.exercisesAndTheirSets[0].exerciseRef._id)}
+            onClick={() =>
+              addEmptyNormalSet(
+                props.item._id,
+                props.item.itemData.exercisesAndTheirSets.map(
+                  (exercise) => exercise.exerciseRef._id
+                )
+              )
+            }
+
           >
             <Plus className="h-4 w-4 mr-2" /> Add Normal Set
           </Button>

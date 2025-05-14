@@ -64,27 +64,75 @@ export const useAddWorkoutItem = () => {
     return addWorkoutItem;
 };
 
-export const useUpdateExercise = () => {
+// export const useUpdateExercise = () => {
+//     const { workoutState, setWorkoutState } = useWorkout();
+
+//     const updateExercise = (itemId: string, updatedExerciseData: any) => {
+//         setWorkoutState((prevState) => {
+//             const updatedItems = prevState.workout.items.map((item) =>
+//                 item._id === itemId
+//                     ? {
+//                         ...item,
+//                         itemData: {
+//                             ...item.itemData,
+//                             exercisesAndTheirSets: item.itemData.exercisesAndTheirSets.map(
+//                                 (exercise: ExerciseSet) =>
+//                                     exercise.exerciseRef._id === updatedExerciseData.exerciseRef._id
+//                                         ? { ...exercise, ...updatedExerciseData }
+//                                         : exercise
+//                             ),
+//                         },
+//                     }
+//                     : item
+//             );
+
+//             return {
+//                 ...prevState,
+//                 workout: {
+//                     ...prevState.workout,
+//                     items: updatedItems,
+//                 },
+//             };
+//         });
+//     };
+
+//     return updateExercise;
+// };
+
+
+export const useUpdateExerciseField = () => {
     const { workoutState, setWorkoutState } = useWorkout();
 
-    const updateExercise = (itemId: string, updatedExerciseData: any) => {
+    const updateExerciseField = (
+        itemId: string,
+        exerciseRefId: string,
+        setIndex: number,
+        field: keyof WorkoutSet,
+        newValue: any
+    ) => {
         setWorkoutState((prevState) => {
-            const updatedItems = prevState.workout.items.map((item) =>
-                item._id === itemId
-                    ? {
-                        ...item,
-                        itemData: {
-                            ...item.itemData,
-                            exercisesAndTheirSets: item.itemData.exercisesAndTheirSets.map(
-                                (exercise: ExerciseSet) =>
-                                    exercise.exerciseRef._id === updatedExerciseData.exerciseRef._id
-                                        ? { ...exercise, ...updatedExerciseData }
-                                        : exercise
-                            ),
-                        },
-                    }
-                    : item
-            );
+            const updatedItems = prevState.workout.items.map((item) => {
+                if (item._id !== itemId || !item.itemData) return item;
+
+                const updatedExercises = item.itemData.exercisesAndTheirSets.map((exercise) => {
+                    if (exercise.exerciseRef._id !== exerciseRefId) return exercise;
+
+                    const updatedSets = exercise.sets.map((set, i) => {
+                        if (i !== setIndex) return set;
+                        return { ...set, [field]: newValue };
+                    });
+
+                    return { ...exercise, sets: updatedSets };
+                });
+
+                return {
+                    ...item,
+                    itemData: {
+                        ...item.itemData,
+                        exercisesAndTheirSets: updatedExercises,
+                    },
+                };
+            });
 
             return {
                 ...prevState,
@@ -96,15 +144,16 @@ export const useUpdateExercise = () => {
         });
     };
 
-    return updateExercise;
+    return updateExerciseField;
 };
+
 
 
 export const useAddEmptyNormalSet = () => {
     const { workoutState, setWorkoutState } = useWorkout();
 
-    const addEmptyNormalSet = (itemId: string, exerciseRefId: string) => {
-        console.log("addEmptyNormalSet", itemId, exerciseRefId);
+    const addEmptyNormalSet = (itemId: string, exerciseRefIds: string[]) => {
+        console.log("addEmptyNormalSet", itemId, exerciseRefIds);
         setWorkoutState((prevState) => {
             const updatedItems = prevState.workout.items.map((item) =>
                 item._id === itemId && item.itemData
@@ -114,7 +163,7 @@ export const useAddEmptyNormalSet = () => {
                             ...item.itemData,
                             exercisesAndTheirSets: item.itemData.exercisesAndTheirSets.map(
                                 (exercise) =>
-                                    exercise.exerciseRef._id === exerciseRefId
+                                    exerciseRefIds.includes(exercise.exerciseRef._id)
                                         ? {
                                             ...exercise,
                                             sets: [
@@ -125,7 +174,7 @@ export const useAddEmptyNormalSet = () => {
                                                     reps: 0,
                                                     weight: 0,
                                                     volume: 0,
-                                                } as WorkoutSet, // Explicitly cast to NormalSet
+                                                } as WorkoutSet, // You can also cast to NormalSet if needed
                                             ],
                                         }
                                         : exercise
