@@ -164,42 +164,7 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                 </Table>
 
 
-                <Button
-                    variant="ghost"
-                    className="w-full mt-3 text-muted-foreground"
-                    onClick={() => setShowGraphs(!showGraphs)}
-                >
-                    {showGraphs ? (
 
-                        <>
-                            <ChevronUp className="h-4 w-4 mr-2" />
-                            Hide Progression Graphs
-                        </>
-                    ) : (
-
-                        <>
-                            <ChevronDown className="h-4 w-4 mr-2" />
-                            Show Progression Graphs
-                        </>
-                    )}
-                </Button>
-
-                {/* Accordion for graphs */}
-                {showGraphs && (
-                    <div className="mt-4 pt-4 border-t border-muted">
-                        <div className="space-y-6">
-                            <div>
-                                <div className="text-sm font-medium mb-2">Weight Progression:</div>
-                                <ProgressChart currentValues={weights} previousValues={weights} label="lbs" />
-                            </div>
-
-                            <div>
-                                <div className="text-sm font-medium mb-2">Volume Progression:</div>
-                                <ProgressChart currentValues={volumes} previousValues={weights} label="lbs" />
-                            </div>
-                        </div>
-                    </div>
-                )}
 
 
 
@@ -245,6 +210,42 @@ const EC_normal: React.FunctionComponent<IEC_normalProps> = (props) => {
                     <Button variant="secondary" className="text-xs md:text-sm " onClick={toggleDrawer}>
                         <Plus className="h-4 w-4 mr-2" /> Add Special Set
                     </Button>
+                    <Button
+                        variant="ghost"
+                        className="w-full mt-3 text-muted-foreground"
+                        onClick={() => setShowGraphs(!showGraphs)}
+                    >
+                        {showGraphs ? (
+
+                            <>
+                                <ChevronUp className="h-4 w-4 mr-2" />
+                                Hide Progression Graphs
+                            </>
+                        ) : (
+
+                            <>
+                                <ChevronDown className="h-4 w-4 mr-2" />
+                                Show Progression Graphs
+                            </>
+                        )}
+                    </Button>
+
+                    {/* Accordion for graphs */}
+                    {showGraphs && (
+                        <div className="mt-4 pt-4 border-t border-muted">
+                            <div className="space-y-6">
+                                <div>
+                                    <div className="text-sm font-medium mb-2">Weight Progression:</div>
+                                    <ProgressChart currentValues={weights} previousValues={weights} label="lbs" />
+                                </div>
+
+                                <div>
+                                    <div className="text-sm font-medium mb-2">Volume Progression:</div>
+                                    <ProgressChart currentValues={volumes} previousValues={weights} label="lbs" />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className="w-full flex justify-between text-center">
                     <div className="flex flex-col">
