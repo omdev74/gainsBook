@@ -11,10 +11,19 @@ import {
 import { Badge } from "../ui/badge";
 
 interface ISupersetProps {
-  sets: (WorkoutSet & { exerciseName: string })[];
+  itemId: string;
+  sets: (WorkoutSet & { exerciseName: string, exerciseSetIndex: number })[];
   index: number;
-  inputchangeHandler: (setIndex: number, key: string, value: any) => void;
+  inputchangeHandler: (
+    itemId: string,
+    exerciseIndex: number,
+    setIndex: number,
+    field: "reps" | "weight",
+    value: number,
+    dropIndex?: number
+  ) => void;
 }
+
 
 const setColors = {
   Drop: "bg-blue-600",
@@ -26,8 +35,20 @@ const setColors = {
 const Superset: React.FC<ISupersetProps> = ({
   sets,
   index,
+  itemId,
   inputchangeHandler,
 }) => {
+
+  const handleInputChange = (
+    key: "reps" | "weight",
+    exerciseIndex: number,
+    value: any,
+    dropIndex?: number
+  ) => {
+    inputchangeHandler(itemId, exerciseIndex, index, key, Number(value), dropIndex);
+  };
+
+
   // Compute how many total rows this superset takes (for index cell)
   const totalRows = sets.reduce((acc, set) => {
     if (set.setType === "Drop" || set.setType === "Myorep") {
@@ -46,6 +67,7 @@ const Superset: React.FC<ISupersetProps> = ({
       : [{ reps: (set as NormalSet | WarmupSet).reps, weight: (set as NormalSet | WarmupSet).weight }];
 
     drops.forEach((drop, dropIdx) => {
+      
       renderedRows.push(
         <TableRow key={`${setIdx}-${dropIdx}`}>
           {/* Set Index column — only for the first total row */}
@@ -82,11 +104,7 @@ const Superset: React.FC<ISupersetProps> = ({
               type="number"
               value={drop.weight}
               onChange={(e) =>
-                inputchangeHandler(setIdx, isDropSet ? "drops" : "weight", {
-                  ...(isDropSet && { dropIndex: dropIdx }),
-                  key: "weight",
-                  value: e.target.value,
-                })
+                handleInputChange("weight", set.exerciseSetIndex, e.target.value, isDropSet ? dropIdx : undefined)
               }
             />
           </TableCell>
@@ -97,11 +115,7 @@ const Superset: React.FC<ISupersetProps> = ({
               type="number"
               value={drop.reps}
               onChange={(e) =>
-                inputchangeHandler(setIdx, isDropSet ? "drops" : "reps", {
-                  ...(isDropSet && { dropIndex: dropIdx }),
-                  key: "reps",
-                  value: e.target.value,
-                })
+                handleInputChange("reps", set.exerciseSetIndex, e.target.value, isDropSet ? dropIdx : undefined)
               }
             />
           </TableCell>
