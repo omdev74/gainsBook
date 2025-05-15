@@ -1,18 +1,25 @@
 "use client";
 import { useWorkout } from "@/contexts/WorkoutContext";
 import { Button } from "../ui/button";
-import { Check, ChevronDown, ChevronUp, Plus, X } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Pencil, Plus, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import ExercisesCustom from "./ExercisesCustom";
 import WorkoutState from "./WorkoutState";
 import EC_normal from "../ExerciseCard_normal";
 import EC_superset from "../ExerciseCard_superset";
-import { useAddWorkoutItem, useDrawerToggle } from '@/hooks/useWorkoutHooks';
+import { useAddWorkoutItem, useDrawerToggle, useUploadWorkout } from '@/hooks/useWorkoutHooks';
 import { useLocation } from "react-router";
+import { useObjectId } from "@/hooks/useObjectId";
+import WorkoutTimer from "../WorkoutTimer";
+
+
 
 export default function WorkoutTrackershadcn() {
+  const getNewId = useObjectId();
   const addWorkoutItem = useAddWorkoutItem();
+  const uploadWorkout = useUploadWorkout();
+
 
   const { isExpanded, toggle, collapse, expand } = useDrawerToggle();
   const { workoutState, setWorkoutState } = useWorkout();
@@ -26,11 +33,26 @@ export default function WorkoutTrackershadcn() {
   }, [location.pathname]);
 
   const handleCancelWorkout = () => {
+
     setWorkoutState({ ...workoutState, ongoing: false });
     toast({
       variant: "destructive",
       description: "Workout Cancelled",
     });
+  };
+
+  const handleCompleteWorkout = () => {
+    try {
+      uploadWorkout();
+    } catch (error) {
+      console.error("Error uploading workout:", error);
+    } finally {
+      setWorkoutState({ ...workoutState, ongoing: false });
+      toast({
+        variant: "success",
+        description: "Workout Completed",
+      });
+    }
   };
 
   const handleAddExercise = () => {
@@ -63,7 +85,7 @@ export default function WorkoutTrackershadcn() {
         ],
       },
       ExerciseNote: "Temporary Note",
-      _id: (currentLength + index + 1).toString(), // Ensure each exercise gets a unique ID
+      _id: getNewId, // Ensure each exercise gets a unique ID
     }));
 
     console.log(items);
@@ -97,7 +119,7 @@ export default function WorkoutTrackershadcn() {
         exercisesAndTheirSets,
       },
       ExerciseNote: "Temporary Note",
-      _id: (workoutState.workout.items.length + 1).toString(),
+      _id: getNewId,
     };
 
     console.log(item);
@@ -127,10 +149,40 @@ export default function WorkoutTrackershadcn() {
         role="region"
       >
         <div className="flex items-center justify-between p-3 sm:p-6 border-t">
-          <div className="flex flex-col items-center">
-            <h2 className="text-sm font-medium text-muted-foreground mb-1">Morning Cardio</h2>
+          <div className="flex flex-col items-center w-full">
+            {/* <h2 className="text-sm font-medium text-muted-foreground mb-1">{workoutState.workout.Title}</h2> */}
+            <input
+              type="text"
+              value={workoutState.workout.Title}
+              onChange={(e) =>
+                setWorkoutState((prev) => ({
+                  ...prev,
+                  workout: {
+                    ...prev.workout,
+                    Title: e.target.value,
+                  },
+                }))
+              }
+              onBlur={() => {
+                if (!workoutState.workout.Title.trim()) {
+                  setWorkoutState((prev) => ({
+                    ...prev,
+                    workout: {
+                      ...prev.workout,
+                      Title: `Test Workout ${prev.workout.date}`,
+                    },
+                  }));
+                }
+              }}
+              className="text-sm font-medium text-muted-foreground mb-1 bg-transparent focus:outline-none text-center w-full overflow-scroll"
+              placeholder={`Test Workout ${workoutState.workout.date}`}
+            />
+            <Pencil
+              className="h-3 w-3 text-muted-foreground/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+
+            />
             <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-foreground">00:45:30</span>
+              <WorkoutTimer startDate={workoutState.workout.date} />
             </div>
           </div>
 
@@ -180,7 +232,7 @@ export default function WorkoutTrackershadcn() {
               <X className="h-4 w-4" />
               <span>Cancel workout</span>
             </Button>
-            <Button variant="secondary" className="text-green-600 hover:bg-green-600 hover:text-white transition-colors" onClick={() => console.log("Workout completed")}>
+            <Button variant="secondary" className="text-green-600 hover:bg-green-600 hover:text-white transition-colors" onClick={handleCompleteWorkout}>
               <Check className="h-4 w-4" />
               <span>Complete workout</span>
             </Button>

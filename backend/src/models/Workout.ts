@@ -4,7 +4,11 @@ import { ItemDataSchema } from './ItemData';
 
 export const WorkoutSchema = new Schema(
   {
-    Title: { type: String, default: `${Date.now()} workout` },
+    Title: {
+      type: String,
+      default: () => `${Date.now()} workout`,
+    },
+
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     date: { type: Date, required: true },
     notes: { type: String },

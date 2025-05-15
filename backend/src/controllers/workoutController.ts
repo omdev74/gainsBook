@@ -1,3 +1,4 @@
+import mongoose, { Types } from "mongoose";
 import CustomExerciseModel from "../models/CustomExercise";
 import DefaultExerciseModel from "../models/DefaultExercise";
 import WorkoutModel from "../models/Workout";
@@ -117,7 +118,7 @@ const getWorkoutsByUserId = async (req: Request, res: Response): Promise<any> =>
             select: 'name', // Specify fields to retrieve from the User model
         });
 
-       
+
 
         if (!workouts || workouts.length === 0) {
             return res.status(404).json({ message: "No workouts found for this user." });
@@ -134,4 +135,35 @@ const getWorkoutsByUserId = async (req: Request, res: Response): Promise<any> =>
 };
 
 
-export { createSampleWorkout, getWorkoutsByUserId };
+
+
+const createWorkoutByUserId = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const user = req.user as any;
+
+        if (!user || !user.id) {
+            return res.status(401).json({ message: "Unauthorized: User not found in request." });
+        }
+
+        const workoutData = {
+            ...req.body,
+            userId: new Types.ObjectId(user.id as string), // ✅ Safe cast
+        };
+
+        const workout = new WorkoutModel(workoutData);
+        await workout.save();
+
+        res.status(201).json({
+            message: "Workout created successfully",
+            workout,
+        });
+    } catch (error) {
+        console.error("Error creating workout:", error);
+        res.status(500).json({ message: "Error creating workout", error });
+    }
+};
+
+
+
+
+export { createSampleWorkout, getWorkoutsByUserId, createWorkoutByUserId };

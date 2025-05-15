@@ -98,3 +98,16 @@ export interface Workout extends Record<string, unknown> {
   updatedAt: string;
 
 }
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'trainer' | 'client' | 'user';
+  trainerId?: string;
+  customExercises?: string[];
+  workouts?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any;  // Allow extra properties if needed
+}
+

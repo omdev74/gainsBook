@@ -1,13 +1,14 @@
 import React, { createContext, useState, useEffect } from "react";
 import {jwtDecode} from "jwt-decode";
+import { User } from "@shared/types/frontend";
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: (token: string, user: object) => void;
+  login: (token: string, user: User) => void;
   logout: () => void;
   validateToken: () => void;
   token: string | null;
-  user: object | null;
+  user: User | null;
   loading: boolean;
 }
 
@@ -27,7 +28,7 @@ export const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<object | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Helper function to check if a token is expired
@@ -59,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(false); // Authentication check completed
   }, []);
 
-  const login = (token: string, user: object) => {
+  const login = (token: string, user: User) => {
     localStorage.setItem("authToken", token);
     localStorage.setItem("user", JSON.stringify(user));
     setToken(token);

@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Workout } from '@shared/types/frontend';
+import { useObjectId } from "@/hooks/useObjectId";
+import { AuthContext } from './AuthContext';
 
 interface WorkoutContextType {
     workoutState: WorkoutState;
@@ -14,13 +16,17 @@ interface WorkoutState {
 const WorkoutContext = createContext<WorkoutContextType | undefined>(undefined);
 
 export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const newId = useObjectId();
+    const { user } = useContext(AuthContext);
+    const nowIso = new Date().toISOString();
+
     const [workoutState, setWorkoutState] = useState<WorkoutState>({
         ongoing: false,
         workout: {
-            "_id": "679eb0d87cfd587968f90153",
-            "Title": "1738453011048 workout",
-            "userId": "678872f7dbef40683cdf6ad6",
-            "date": "2025-02-01T23:40:08.822Z",
+            "_id": newId,
+            "Title": `Test Workout ${Date.now()}`,
+            "userId": user?._id,
+            "date": nowIso,
             "notes": "Upper body workout focusing on chest and triceps.",
             "items": [
                 {
@@ -29,7 +35,7 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                         "exercisesAndTheirSets": [
                             {
                                 "exerciseRef": {
-                                    "_id": "53ca25b3-61d9-4f72-bfdb-492b83484ff5",
+                                    "_id": "678ebf9115751d7decc978e1",
                                     "name": "Arnold Shoulder Press"
                                 },
                                 "exerciseType": "DefaultExercise",
@@ -62,7 +68,7 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                         ]
                     },
                     "ExerciseNote": null,
-                    "_id": "1"
+                    "_id": "663e7b1f4e9a28a8e2d7e4a3"
                 },
                 {
                     "itemType": "Superset",
@@ -134,7 +140,7 @@ export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ child
                         ]
                     },
                     "ExerciseNote": null,
-                    "_id": "2"
+                    "_id": "663e7b1f4e9a28a8e2d7e4a4"
                 }
             ],
             "TotalVolume": 500,

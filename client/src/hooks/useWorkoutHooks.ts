@@ -1,8 +1,10 @@
 // useWorkoutHooks.ts
+import { AuthContext } from '@/contexts/AuthContext';
 import { useWorkout } from '@/contexts/WorkoutContext';
 import { ExerciseSet, WorkoutSet } from '@shared/types/frontend';
+import axios from 'axios';
 import { useContext, useState } from 'react';
-
+const backendURI = import.meta.env.VITE_BACKEND_URI;
 
 export const useToggleOngoing = () => {
     const { workoutState, setWorkoutState } = useWorkout();
@@ -255,11 +257,48 @@ export const useAddEmptySpecialSet = () => {
 }
 
 export function useDrawerToggle(defaultState: boolean = false) {
-  const [isExpanded, setIsExpanded] = useState(defaultState);
+    const [isExpanded, setIsExpanded] = useState(defaultState);
 
-  const toggle = () => setIsExpanded(prev => !prev);
-  const collapse = () => setIsExpanded(false);
-  const expand = () => setIsExpanded(true);
+    const toggle = () => setIsExpanded(prev => !prev);
+    const collapse = () => setIsExpanded(false);
+    const expand = () => setIsExpanded(true);
 
-  return { isExpanded, setIsExpanded, toggle, collapse, expand };
+    return { isExpanded, setIsExpanded, toggle, collapse, expand };
 }
+
+
+export const useUploadWorkout = () => {
+    const { token } = useContext(AuthContext);
+    const { workoutState, setWorkoutState } = useWorkout();
+
+    const uploadWorkout = async () => {
+        try {
+            const response = await axios.post(
+                `${backendURI}/createworkout`,
+                workoutState.workout, // Send actual workout data as body
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log("Workout uploaded successfully:", response.data);
+
+            // Reset or mark workout as finished
+            setWorkoutState({ ...workoutState, ongoing: false });
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error("Axios error:", error.response?.data || error.message);
+            } else if (error instanceof Error) {
+                console.error("Error:", error.message);
+            } else {
+                console.error("An unknown error occurred.");
+            }
+        }
+    };
+
+    return uploadWorkout;
+};

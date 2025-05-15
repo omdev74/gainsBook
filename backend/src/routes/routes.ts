@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import { register, login} from '../controllers/authController';
+import { register, login } from '../controllers/authController';
 import Workout from '../models/Workout';
 import { isAuthenticated } from '../middlewares/isAuthenticated';
-import {createSampleWorkout,getWorkoutsByUserId} from '../controllers/workoutController';
-import{getCustomExercisesByUserId} from '../controllers/customExerciseController';
+import { createSampleWorkout, createWorkoutByUserId, getWorkoutsByUserId } from '../controllers/workoutController';
+import { getCustomExercisesByUserId } from '../controllers/customExerciseController';
 import DefaultExerciseModel from '../models/DefaultExercise';
 
 const router = express.Router();
@@ -47,15 +47,16 @@ router.post('/login', login);
 
 // workout
 // create
+router.post("/createworkout", isAuthenticated, createWorkoutByUserId)
 
 
-router.post("/createsampleworkout",isAuthenticated,createSampleWorkout)
+router.post("/createsampleworkout", isAuthenticated, createSampleWorkout)
 // read
 
-router.get("/workouts", isAuthenticated,getWorkoutsByUserId);
+router.get("/workouts", isAuthenticated, getWorkoutsByUserId);
 
 
-router.get("/customexercises", isAuthenticated,getCustomExercisesByUserId);
+router.get("/customexercises", isAuthenticated, getCustomExercisesByUserId);
 router.get('/defaultexercises', async (req, res) => {
     try {
         const exercises = await DefaultExerciseModel.find();  // Fetching all exercises
