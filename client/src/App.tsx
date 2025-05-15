@@ -14,7 +14,7 @@ import WorkoutHistoryCustom from './components/Pages/WorkoutHistoryCustom';
 import WorkoutHistory from './components/Pages/History';
 import Exercise from './components/Pages/Exercise';
 
-import { WorkoutProvider, useWorkout } from './contexts/WorkoutContext';
+import { OngoingWorkoutProvider, useWorkout } from './contexts/OngoingWorkoutContext';
 import { AuthContext } from './contexts/AuthContext'; // Assuming AuthContext is used for authentication.
 import Profile from './components/Pages/Profile';
 import WorkoutPage from './components/Pages/Workout';
@@ -24,10 +24,10 @@ import { Toaster } from './components/ui/toaster';
 
 const App: React.FC = () => {
   return (
-    <WorkoutProvider>
+    <OngoingWorkoutProvider>
       <MainContent />
       <Toaster />
-    </WorkoutProvider>
+    </OngoingWorkoutProvider>
   );
 };
 
@@ -41,7 +41,8 @@ const MainContent: React.FC = () => {
     <>
       {/* Conditionally render Navbar and WorkoutTracker based on authentication */}
       {isLoggedIn && <Navbar />}
-      {isLoggedIn && ongoing && <WorkoutTrackershadcn />}
+      {isLoggedIn && workoutState.ongoing && workoutState.workout && <WorkoutTrackershadcn />}
+
 
       <main className="sm:mt-16 mt-0 scroll-auto sm:mb-0 mb-32">
         <Routes>

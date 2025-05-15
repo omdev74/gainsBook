@@ -15,15 +15,22 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChevronRight } from "lucide-react"
 import { ModeToggle } from "../ModeToggle";
+import { useWorkout } from "@/contexts/OngoingWorkoutContext";
+
+import { useObjectId } from "@/hooks/useObjectId";
 
 const backendURI = import.meta.env.VITE_BACKEND_URI;
 
 export default function SettingsPage() {
+    const newId = useObjectId();
+    const { user } = useContext(AuthContext);
+    const nowIso = new Date().toISOString();
     const { token } = useContext(AuthContext);
     const [weightUnit, setWeightUnit] = useState("kg")
     const [distanceUnit, setDistanceUnit] = useState("km")
     const [sizeUnit, setSizeUnit] = useState("cm")
     const { logout } = useContext(AuthContext)
+    const { workoutState, setWorkoutState } = useWorkout();
 
 
     const onSubmitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,7 +46,7 @@ export default function SettingsPage() {
                 }
             );
 
-            
+
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 // Handle Axios-specific errors
@@ -53,6 +60,140 @@ export default function SettingsPage() {
             }
         }
     };
+
+    const startsampleworkout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        setWorkoutState({
+            workout: {
+                "_id": newId,
+                "Title": `Test Workout ${Date.now()}`,
+                "userId": user?._id,
+                "date": nowIso,
+                "notes": "Upper body workout focusing on chest and triceps.",
+                "items": [
+                    {
+                        "itemType": "Regular",
+                        "itemData": {
+                            "exercisesAndTheirSets": [
+                                {
+                                    "exerciseRef": {
+                                        "_id": "678ebf9115751d7decc978e1",
+                                        "name": "Arnold Shoulder Press"
+                                    },
+                                    "exerciseType": "DefaultExercise",
+                                    "sets": [
+                                        {
+                                            "index": 1,
+                                            "setType": "Normal",
+                                            "reps": 12,
+                                            "weight": 0,
+                                            "volume": 0
+                                        },
+                                        {
+                                            "index": 2,
+                                            "setType": "Normal",
+                                            "reps": 20,
+                                            "weight": 100,
+                                            "volume": 500
+                                        },
+                                        {
+                                            "index": 3,
+                                            "drops": [
+                                                { reps: 8, weight: 60 },
+                                                { reps: 8, weight: 60 },
+                                                { reps: 6, weight: 100 },
+                                            ],
+                                            "setType": "Drop",
+                                        },
+                                    ]
+                                }
+                            ]
+                        },
+                        "ExerciseNote": null,
+                        "_id": "663e7b1f4e9a28a8e2d7e4a3"
+                    },
+                    {
+                        "itemType": "Superset",
+                        "itemData": {
+                            "exercisesAndTheirSets": [
+                                {
+                                    "exerciseRef": {
+                                        "_id": "678ebf9115751d7decc978e1",
+                                        "name": "Arnold Shoulder Press"
+                                    },
+                                    "exerciseType": "DefaultExercise",
+                                    "sets": [
+                                        {
+                                            "index": 1,
+                                            "setType": "Normal",
+                                            "reps": 10,
+                                            "weight": 50,
+                                            "volume": 500
+                                        },
+                                        {
+                                            "index": 2,
+                                            "setType": "Normal",
+                                            "reps": 20,
+                                            "weight": 100,
+                                            "volume": 500
+                                        },
+                                        {
+                                            "index": 3,
+                                            "drops": [
+                                                { reps: 8, weight: 60 },
+                                                { reps: 8, weight: 60 },
+                                            ],
+                                            "setType": "Drop",
+                                        },
+                                    ]
+                                },
+                                {
+                                    "exerciseRef": {
+                                        "_id": "678ebf9115751d7decc978e3",
+                                        "name": "Barbell Hack Squats"
+                                    },
+                                    "exerciseType": "CustomExercise",
+                                    "sets": [
+                                        {
+                                            "index": 1,
+                                            "setType": "Normal",
+                                            "reps": 10,
+                                            "weight": 50,
+                                            "volume": 500
+                                        },
+                                        {
+                                            "index": 2,
+                                            "drops": [
+                                                { reps: 8, weight: 60 },
+                                                { reps: 8, weight: 60 },
+                                            ],
+                                            "setType": "Drop",
+                                        },
+                                        {
+                                            "index": 3,
+                                            "drops": [
+                                                { reps: 8, weight: 60 },
+                                                { reps: 8, weight: 60 },
+                                            ],
+                                            "setType": "Drop",
+                                        },
+                                    ]
+                                }
+                            ]
+                        },
+                        "ExerciseNote": null,
+                        "_id": "663e7b1f4e9a28a8e2d7e4a4"
+                    }
+                ],
+                "TotalVolume": 500,
+                "TotalSets": 500,
+                "TotalExercises": 500,
+                "createdAt": "2025-02-01T23:40:08.827Z",
+                "updatedAt": "2025-02-01T23:40:08.827Z",
+                "__v": 0
+            }, ongoing: true
+        });
+
+    }
     return (
         <div className="mb-32">
             <nav className="bg-background sticky top-0 left-0 right-0 sm:hidden flex justify-between items-center z-10 p-2.5">
@@ -68,8 +209,8 @@ export default function SettingsPage() {
             <div className="flex flex-col justify-between gap-6 mx-auto px-4 py-8 sm:max-w-4xl ">
                 <div className="space-y-4">
 
-                    <Button variant="outline" className="w-full" onClick={() => console.log("Sample workout generated")}>
-                        Generate Sample Workout
+                    <Button variant="outline" className="w-full" onClick={startsampleworkout}>
+                        Start Sample Workout
                     </Button>
                     <Button
                         variant="outline" className="w-full"

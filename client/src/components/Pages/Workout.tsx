@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Dumbbell, FileText, Play, PlusCircle, Search, History } from "lucide-react"
-import { useWorkout } from "@/contexts/WorkoutContext"
+import { useWorkout } from "@/contexts/OngoingWorkoutContext"
 
 
 // This would typically come from an API or database
@@ -28,13 +28,9 @@ const savedSplits = [
 ]
 
 export default function WorkoutPage() {
-    const { workoutState, setWorkoutState } = useWorkout();
+    const { workoutState, setWorkoutState , startWorkout} = useWorkout();
     const { ongoing } = workoutState;
-    const handleNewWorkout = () => {
-
-        console.log({ ...workoutState, ongoing: true });
-        setWorkoutState({ ...workoutState, ongoing: true });
-    }
+    
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -48,7 +44,7 @@ export default function WorkoutPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <Button className="w-full" onClick={handleNewWorkout}>
+                            <Button className="w-full" onClick={startWorkout}>
                                 <PlusCircle className="mr-2 h-4 w-4" /> Empty Workout
                             </Button>
                             <Button variant="outline" className="w-full">

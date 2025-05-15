@@ -1,5 +1,5 @@
 "use client";
-import { useWorkout } from "@/contexts/WorkoutContext";
+import { useWorkout } from "@/contexts/OngoingWorkoutContext";
 import { Button } from "../ui/button";
 import { Check, ChevronDown, ChevronUp, Pencil, Plus, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -22,19 +22,19 @@ export default function WorkoutTrackershadcn() {
 
 
   const { isExpanded, toggle, collapse, expand } = useDrawerToggle();
-  const { workoutState, setWorkoutState } = useWorkout();
+  const { workoutState, setWorkoutState ,clearWorkout} = useWorkout();
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const { toast } = useToast();
 
   const location = useLocation();
-
+  if (!workoutState.workout) return null;
   useEffect(() => {
     collapse();
-  }, [location.pathname]);
+  }, [location.pathname, workoutState.ongoing]);
 
   const handleCancelWorkout = () => {
 
-    setWorkoutState({ ...workoutState, ongoing: false });
+    clearWorkout();
     toast({
       variant: "destructive",
       description: "Workout Cancelled",
@@ -60,6 +60,7 @@ export default function WorkoutTrackershadcn() {
   };
 
   const addExercisestoWorkoutAsIndividual = (exercises: any) => {
+    if (!workoutState.workout) return;
     console.log("trying to add exercises to the workout as individual", exercises);
 
     // Ensure you capture the current length of items before starting
@@ -132,6 +133,9 @@ export default function WorkoutTrackershadcn() {
     setIsAddingExercise(false); // Hide the selection component
   };
 
+
+
+
   return (
     <div className="relative">
       {/* Show Exercise Selection at the Top */}
@@ -155,23 +159,30 @@ export default function WorkoutTrackershadcn() {
               type="text"
               value={workoutState.workout.Title}
               onChange={(e) =>
-                setWorkoutState((prev) => ({
-                  ...prev,
-                  workout: {
-                    ...prev.workout,
-                    Title: e.target.value,
-                  },
-                }))
-              }
-              onBlur={() => {
-                if (!workoutState.workout.Title.trim()) {
-                  setWorkoutState((prev) => ({
+                setWorkoutState((prev) => {
+                  if (!prev.workout) return prev; // Do nothing if workout is null
+                  return {
                     ...prev,
                     workout: {
                       ...prev.workout,
-                      Title: `Test Workout ${prev.workout.date}`,
+                      Title: e.target.value,
                     },
-                  }));
+                  }
+                })
+              }
+              onBlur={() => {
+                if (!workoutState.workout) return;
+                if (!workoutState.workout.Title.trim()) {
+                  setWorkoutState((prev) => {
+                    if (!prev.workout) return prev; // Do nothing if workout is null
+                    return {
+                      ...prev,
+                      workout: {
+                        ...prev.workout,
+                        Title: `Test Workout ${prev.workout.date}`,
+                      },
+                    }
+                  });
                 }
               }}
               className="text-sm font-medium text-muted-foreground mb-1 bg-transparent focus:outline-none text-center w-full overflow-scroll"

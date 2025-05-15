@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChevronDown, ChevronUp, EllipsisVertical, MoreVertical, Plus, TrendingUp, X } from 'lucide-react';
-import { useWorkout } from '@/contexts/WorkoutContext';
+import { useWorkout } from '@/contexts/OngoingWorkoutContext';
 import { DroppableSet, NormalSet, RepetitiveSet, WarmupSet, WorkoutItem, WorkoutSet } from '@shared/types/frontend';
 import Set from './Sets/SuperSet';
 import { Drawer, DrawerTitle, DrawerContent, DrawerHeader, DrawerFooter, DrawerClose, DrawerTrigger } from "@/components/ui/drawer";
@@ -45,6 +45,7 @@ const EC_superset: React.FunctionComponent<IEC_supersetProps> = (props) => {
   ) => {
     console.log(`Input changed: itemId=${itemId}, exerciseName=${props.item.itemData.exercisesAndTheirSets[exerciseIndex].exerciseRef.name},exerciseIndex=${exerciseIndex}, setIndex=${setIndex}, field=${field}, value=${value}, dropIndex=${dropIndex}`);
     setWorkoutState((prevState) => {
+      if (!prevState.workout) return prevState; // Do nothing if workout is null
       const newItems = [...prevState.workout.items];
 
       const workoutItem = newItems.find((item) => item._id === itemId);

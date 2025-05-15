@@ -1,6 +1,6 @@
 // useWorkoutHooks.ts
 import { AuthContext } from '@/contexts/AuthContext';
-import { useWorkout } from '@/contexts/WorkoutContext';
+import { useWorkout } from '@/contexts/OngoingWorkoutContext';
 import { ExerciseSet, WorkoutSet } from '@shared/types/frontend';
 import axios from 'axios';
 import { useContext, useState } from 'react';
@@ -23,13 +23,16 @@ export const useUpdateNotes = () => {
     const { setWorkoutState } = useWorkout();
 
     const updateNotes = (newNotes: string) => {
-        setWorkoutState((prevState) => ({
-            ...prevState,
-            workout: {
-                ...prevState.workout,
-                notes: newNotes,
-            },
-        }));
+        setWorkoutState((prevState) => {
+            if (!prevState.workout) return prevState; // Do nothing if workout is null
+            return {
+                ...prevState,
+                workout: {
+                    ...prevState.workout,
+                    notes: newNotes,
+                },
+            }
+        });
     };
 
     return updateNotes;
@@ -38,13 +41,16 @@ export const useRemoveWorkoutItem = () => {
     const { workoutState, setWorkoutState } = useWorkout();
 
     const removeWorkoutItem = (itemId: string) => {
-        setWorkoutState((prevState) => ({
-            ...prevState,
-            workout: {
-                ...prevState.workout,
-                items: prevState.workout.items.filter((item) => item._id !== itemId),
-            },
-        }));
+        setWorkoutState((prevState) => {
+            if (!prevState.workout) return prevState; // Do nothing if workout is null
+            return {
+                ...prevState,
+                workout: {
+                    ...prevState.workout,
+                    items: prevState.workout.items.filter((item) => item._id !== itemId),
+                },
+            }
+        });
     };
 
     return removeWorkoutItem;
@@ -54,63 +60,19 @@ export const useAddWorkoutItem = () => {
     const { workoutState, setWorkoutState } = useWorkout();
 
     const addWorkoutItem = (newItem: any) => {
-        setWorkoutState((prevState) => ({
-            ...prevState,
-            workout: {
-                ...prevState.workout,
-                items: [...prevState.workout.items, newItem],
-            },
-        }));
-    };
-
-    return addWorkoutItem;
-};
-
-export const useUpdateExerciseField = () => {
-    const { workoutState, setWorkoutState } = useWorkout();
-
-    const updateExerciseField = (
-        itemId: string,
-        exerciseRefId: string,
-        setIndex: number,
-        field: keyof WorkoutSet,
-        newValue: any
-    ) => {
         setWorkoutState((prevState) => {
-            const updatedItems = prevState.workout.items.map((item) => {
-                if (item._id !== itemId || !item.itemData) return item;
-
-                const updatedExercises = item.itemData.exercisesAndTheirSets.map((exercise) => {
-                    if (exercise.exerciseRef._id !== exerciseRefId) return exercise;
-
-                    const updatedSets = exercise.sets.map((set, i) => {
-                        if (i !== setIndex) return set;
-                        return { ...set, [field]: newValue };
-                    });
-
-                    return { ...exercise, sets: updatedSets };
-                });
-
-                return {
-                    ...item,
-                    itemData: {
-                        ...item.itemData,
-                        exercisesAndTheirSets: updatedExercises,
-                    },
-                };
-            });
-
+            if (!prevState.workout) return prevState; // Do nothing if workout is null
             return {
                 ...prevState,
                 workout: {
                     ...prevState.workout,
-                    items: updatedItems,
+                    items: [...prevState.workout.items, newItem],
                 },
-            };
+            }
         });
     };
 
-    return updateExerciseField;
+    return addWorkoutItem;
 };
 
 
@@ -121,6 +83,7 @@ export const useAddEmptyNormalSet = () => {
     const addEmptyNormalSet = (itemId: string, exerciseRefIds: string[]) => {
         console.log("addEmptyNormalSet", itemId, exerciseRefIds);
         setWorkoutState((prevState) => {
+            if (!prevState.workout) return prevState; // Do nothing if workout is null
             const updatedItems = prevState.workout.items.map((item) =>
                 item._id === itemId && item.itemData
                     ? {
@@ -171,6 +134,7 @@ export const useAddEmptySpecialSet = () => {
         switch (shortText) {
 
             case "Warmup": setWorkoutState((prevState) => {
+                if (!prevState.workout) return prevState; // Do nothing if workout is null
                 const updatedItems = prevState.workout.items.map((item) =>
                     item._id === itemId && item.itemData
                         ? {
@@ -211,6 +175,7 @@ export const useAddEmptySpecialSet = () => {
                 break
             case "Drop":
             case "Myorep": setWorkoutState((prevState) => {
+                if (!prevState.workout) return prevState; // Do nothing if workout is null
                 const updatedItems = prevState.workout.items.map((item) =>
                     item._id === itemId && item.itemData
                         ? {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useWorkout } from '@/contexts/WorkoutContext';
+import { useWorkout } from '@/contexts/OngoingWorkoutContext';
 import { AccordionTrigger, Accordion, AccordionContent, AccordionItem } from '@/components/ui/accordion';
 
 interface IWorkoutStateProps { }
